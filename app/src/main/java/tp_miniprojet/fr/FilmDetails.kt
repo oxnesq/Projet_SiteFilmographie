@@ -124,6 +124,12 @@ fun FilmDetailsScreen(movieId: Int, navController: NavHostController) {
                             modifier = Modifier.weight(0.33f),
                         )  {
                             ActorItem(actor = a, posterUrl = posterUrl, navController)
+                            Text(
+                                text = a.character,
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier.padding(15.dp),
+                                textAlign = TextAlign.Justify,
+                            )
                         }
                 }
             }

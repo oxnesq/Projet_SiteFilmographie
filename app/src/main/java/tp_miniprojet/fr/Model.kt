@@ -147,7 +147,8 @@ data class ModelActor(
     val name: String = "",
     val place_of_birth: String = "",
     val popularity: Double = 0.0,
-    val profile_path: String = ""
+    val profile_path: String = "",
+    val character: String =""
 )
 
 data class CreditsActor(
