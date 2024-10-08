@@ -47,7 +47,7 @@ fun SerieScreen(searchQuery: TextFieldValue) {
     val viewModel: MainViewModel = viewModel()
     val series by viewModel.series.collectAsState()
     val posterUrl = "https://image.tmdb.org/t/p/w500"
-    var selectedSerie by remember { mutableStateOf<ResultListSerie?>(null) }
+    var selectedSerie by remember { mutableStateOf<ModelSerie?>(null) }
 
     LaunchedEffect(searchQuery.text) {
         if (searchQuery.text==""){
@@ -90,7 +90,7 @@ fun SerieScreen(searchQuery: TextFieldValue) {
 
 
 @Composable
-fun SerieItem(serie: ResultListSerie, posterUrl: String, onClick: () -> Unit) {
+fun SerieItem(serie: ModelSerie, posterUrl: String, onClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -112,7 +112,7 @@ fun SerieItem(serie: ResultListSerie, posterUrl: String, onClick: () -> Unit) {
 
 
 @Composable
-fun SerieDescription(serie : ResultListSerie, posterUrl: String) {
+fun SerieDescription(serie : ModelSerie, posterUrl: String) {
     Column(
         modifier = Modifier
             .fillMaxWidth()

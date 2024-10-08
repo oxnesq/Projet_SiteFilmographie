@@ -8,12 +8,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.getValue
@@ -35,6 +33,8 @@ import tp_premiereapplication.fr.R
 import tp_premiereapplication.fr.ui.theme.TP_PremiereApplicationTheme
 import androidx.compose.foundation.Image as Image
 import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 
 @Serializable
 class Home
@@ -47,6 +47,9 @@ class Serie()
 
 @Serializable
 class Actor()
+
+@Serializable
+class FilmDetails()
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -191,9 +194,19 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.padding(innerPadding)
                     ) {
                         composable<Home> { HomeScreen(windowSizeClass, navController) }
-                        composable<Film> { FilmScreen(searchQuery) }
+                        composable<Film> { FilmScreen(searchQuery, navController) }
                         composable<Serie> { SerieScreen(searchQuery) }
                         composable<Actor> { ActorScreen(searchQuery) }
+
+                        composable(
+                            "movieDetails/{movieId}",
+                            arguments = listOf(navArgument("movieId") { type = NavType.IntType })
+                        ) { backStackEntry ->
+                            val movieId = backStackEntry.arguments?.getInt("movieId")
+                            movieId?.let {
+                                FilmDetailsScreen( movieId = it)
+                                }
+                            }
                     }
                 }
 

@@ -156,7 +156,8 @@ fun LogosText() {
                 contentDescription = "Email",
                 modifier = Modifier
                     .size(20.dp),
-                tint = Color(0xFF2196F3)
+                tint = Color(0xFF0e76a8),
+
             )
             Spacer(modifier = Modifier.width(5.dp))
             Text(
@@ -184,7 +185,6 @@ fun LogosText() {
 
 @Composable
 fun ButtonSearch(navController: NavController) {
-    // Ajouter un bouton en bas
     Button(onClick = { navController.navigate(Film()) },
         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2196F3))
     ) {

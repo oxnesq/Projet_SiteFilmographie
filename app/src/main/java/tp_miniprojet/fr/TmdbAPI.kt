@@ -21,7 +21,7 @@ interface TmdbApi {
 
     // CHERCHER UN FILM ACTEUR SERIE
     @GET("movie/{id}")
-    suspend fun movieDetails(@Path("id") id: String,@Query("api_key") api_key: String, @Query("language") language: String): ModelMovie
+    suspend fun movieDetails(@Path("id") id: String,@Query("api_key") api_key: String, @Query("language") language: String, @Query("append_to_response") appendToResponse: String ): ModelMovie
 
     @GET("person/{id}")
     suspend fun actorDetails(@Path("id") id: String, @Query("api_key") api_key: String,@Query("language") language: String, @Query("append_to_response") appendToResponse: String ): ModelActor
@@ -42,10 +42,6 @@ interface TmdbApi {
     suspend fun searchseries(@Query("api_key") api_key: String,
                              @Query("query") searchQuery: String, @Query("language") language: String): ModelListSerie
 
-
-    // CHERCHER UN GENRE D UN FILM
-    @GET("genre/movie/list")
-    suspend fun lastgenres(@Query("api_key") api_key: String, @Query("language") language: String) :ResultListGenre
 
 
 }

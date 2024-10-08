@@ -11,27 +11,9 @@ data class ResultListGenre(
 
 data class ModelListSerie(
     val page: Int,
-    val results: List<ResultListSerie>,
+    val results: List<ModelSerie>,
     val total_pages: Int,
     val total_results: Int
-)
-
-data class ResultListSerie(
-    val adult: Boolean,
-    val backdrop_path: String?,
-    val first_air_date: String,
-    val genre_ids: List<Int>,
-    val id: Int,
-    val media_type: String,
-    val name: String,
-    val origin_country: List<String>,
-    val original_language: String,
-    val original_name: String,
-    val overview: String,
-    val popularity: Double,
-    val poster_path: String?,
-    val vote_average: Double,
-    val vote_count: Int
 )
 
 data class ModelSerie(
@@ -153,22 +135,9 @@ data class SpokenLanguageSerie(
 
 data class ModelListActor(
     val page: Int,
-    val results: List<ResultListActor>,
+    val results: List<ModelActor>,
     val total_pages: Int,
     val total_results: Int
-)
-
-data class ResultListActor(
-    val adult: Boolean,
-    val gender: Int,
-    val id: Int,
-    val known_for: List<KnownFor>,
-    val known_for_department: String,
-    val media_type: String,
-    val name: String,
-    val original_name: String,
-    val popularity: Double,
-    val profile_path: String?
 )
 
 data class KnownFor(
@@ -207,32 +176,14 @@ data class ModelActor(
     val name: String,
     val place_of_birth: String,
     val popularity: Double,
-    val profile_path: String
+    val profile_path: String?
 )
 
 data class ModelListMovie(
     val page: Int,
-    val results: List<ResultListMovie>,
+    val results: List<ModelMovie>,
     val total_pages: Int,
     val total_results: Int
-)
-
-data class ResultListMovie(
-    val adult: Boolean,
-    val backdrop_path: String,
-    val genre_ids: List<Int>,
-    val id: Int,
-    val media_type: String,
-    val original_language: String,
-    val original_title: String,
-    val overview: String,
-    val popularity: Double,
-    val poster_path: String,
-    val release_date: String,
-    val title: String,
-    val video: Boolean,
-    val vote_average: Double,
-    val vote_count: Int
 )
 
 data class ModelMovie(
@@ -273,7 +224,7 @@ data class BelongsToCollectionMovie(
 )
 
 data class CreditsMovie(
-    val cast: List<CastMovie>,
+    val cast: List<ModelActor>,
     val crew: List<CrewMovie>
 )
 
@@ -298,21 +249,6 @@ data class SpokenLanguageMovie(
     val english_name: String,
     val iso_639_1: String,
     val name: String
-)
-
-data class CastMovie(
-    val adult: Boolean,
-    val cast_id: Int,
-    val character: String,
-    val credit_id: String,
-    val gender: Int,
-    val id: Int,
-    val known_for_department: String,
-    val name: String,
-    val order: Int,
-    val original_name: String,
-    val popularity: Double,
-    val profile_path: String
 )
 
 data class CrewMovie(

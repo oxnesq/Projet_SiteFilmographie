@@ -9,12 +9,14 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 class MainViewModel : ViewModel() {
-    val movies = MutableStateFlow<List<ResultListMovie>>(listOf())
-    val actors = MutableStateFlow<List<ResultListActor>>(listOf())
-    val series = MutableStateFlow<List<ResultListSerie>>(listOf())
+    val movies = MutableStateFlow<List<ModelMovie>>(listOf())
+    val actors = MutableStateFlow<List<ModelActor>>(listOf())
+    val series = MutableStateFlow<List<ModelSerie>>(listOf())
     val genres = MutableStateFlow<List<Genre>>(listOf())
     private val _actorDetails = MutableStateFlow<ModelActor?>(null)
     val actorDetails: StateFlow<ModelActor?> get() = _actorDetails
+    private val _movieDetails = MutableStateFlow<ModelMovie?>(null)
+    val movieDetails: StateFlow<ModelMovie?> get() = _movieDetails
 
 
     val retrofit = Retrofit.Builder()
@@ -61,18 +63,19 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun getGenres() {
-        viewModelScope.launch {
-            genres.value = api.lastgenres(api_key, "fr").genres
-        }
-    }
-/*
     fun getActorDetails(id: Int){
         viewModelScope.launch {
-            val actorDetailResponse = api.actorDetails(api_key,"fr","credits")
+            val actorDetailResponse = api.actorDetails(id.toString(),api_key,"fr","credits")
             _actorDetails.value = actorDetailResponse
         }
     }
 
-*/
+    fun getMovieDetails(id: Int){
+        viewModelScope.launch {
+            val movieDetailResponse = api.movieDetails(id.toString(),api_key,"fr","credits")
+            _movieDetails.value = movieDetailResponse
+        }
+    }
+
+
 }

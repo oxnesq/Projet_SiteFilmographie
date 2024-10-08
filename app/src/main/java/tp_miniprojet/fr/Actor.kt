@@ -2,6 +2,8 @@ package tp_miniprojet.fr
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import coil.compose.AsyncImage
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,7 +19,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Person
@@ -40,6 +44,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 
@@ -49,7 +54,7 @@ fun ActorScreen(searchQuery: TextFieldValue) {
     val viewModel: MainViewModel = viewModel()
     val actors by viewModel.actors.collectAsState()
     val posterUrl = "https://image.tmdb.org/t/p/w500"
-    var selectedActor by remember { mutableStateOf<ResultListActor?>(null) }
+    var selectedActor by remember { mutableStateOf<ModelActor?>(null) }
     val actorDetails by viewModel.actorDetails.collectAsState()
 
     LaunchedEffect(searchQuery.text) {
@@ -62,14 +67,11 @@ fun ActorScreen(searchQuery: TextFieldValue) {
 
 
     if (selectedActor != null) {
-        /*LaunchedEffect(selectedActor) {
-            selectedActor?.let {
-                viewModel.getActorDetails(it.id)
-            }
-        }
+        LaunchedEffect(selectedActor) {
+            viewModel.getActorDetails(selectedActor!!.id)
 
-         */
-        ActorDescription(selectedActor!!, posterUrl)
+        }
+        actorDetails?.let { ActorDescription(it, posterUrl) }
     } else {
         Column(
             modifier = Modifier
@@ -101,7 +103,7 @@ fun ActorScreen(searchQuery: TextFieldValue) {
 }
 
 @Composable
-fun ActorItem(actor: ResultListActor, posterUrl: String, onClick: () -> Unit) {
+fun ActorItem(actor: ModelActor, posterUrl: String, onClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -110,13 +112,14 @@ fun ActorItem(actor: ResultListActor, posterUrl: String, onClick: () -> Unit) {
             .clickable { onClick() }
     ) {
         if (actor.profile_path != null) {
-        AsyncImage(
-            model = posterUrl + actor.profile_path,
-            contentDescription = "Poster du film",
-            modifier = Modifier.clip(CircleShape)
-        )
-        Spacer(modifier = Modifier.height(4.dp))
-} else {
+            AsyncImage(
+                model = posterUrl + actor.profile_path,
+                contentDescription = "Poster du film",
+                modifier = Modifier.clip(CircleShape),
+                //contentScale = ContentScale.Crop
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+        } else {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -132,17 +135,23 @@ fun ActorItem(actor: ResultListActor, posterUrl: String, onClick: () -> Unit) {
                 )
             }
         }
-        Text(text = actor.name, style = MaterialTheme.typography.titleLarge, modifier = Modifier.align(Alignment.CenterHorizontally))
+        Text(
+            text = actor.name,
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
     }
 }
 
 
 @Composable
-fun ActorDescription(actor: ResultListActor, posterUrl: String) {
+fun ActorDescription(actor: ModelActor, posterUrl: String) {
+    val scrollState = rememberScrollState()
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(5.dp),
+            .padding(7.dp)
+            .verticalScroll(scrollState),
     ) {
         if (actor.profile_path != null) {
             AsyncImage(
@@ -156,7 +165,7 @@ fun ActorDescription(actor: ResultListActor, posterUrl: String) {
                 contentScale = ContentScale.Crop
             )
             Spacer(modifier = Modifier.height(4.dp))
-        }else {
+        } else {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -180,7 +189,15 @@ fun ActorDescription(actor: ResultListActor, posterUrl: String) {
         )
         Spacer(modifier = Modifier.height(14.dp))
         Text(text = "Biographie", style = MaterialTheme.typography.titleLarge)
-        //Text(text = actor.biography, style = MaterialTheme.typography.titleLarge)
+        Text(
+            text = actor.biography,
+            style = MaterialTheme.typography.bodyMedium,
+            textAlign = TextAlign.Justify,
+        )
+
+        Spacer(modifier = Modifier.height(14.dp))
+        Text(text = "Filmographie", style = MaterialTheme.typography.titleLarge)
+
 
     }
 }
