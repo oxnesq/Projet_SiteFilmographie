@@ -26,27 +26,27 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 
 @Composable
-fun FilmDetailsScreen(movieId: Int, navController: NavHostController) {
+fun SerieDetailsScreen(serieId: Int, navController: NavHostController) {
     val viewModel: MainViewModel = viewModel()
-    val movieDetails by viewModel.movieDetails.collectAsState()
+    val serieDetails by viewModel.serieDetails.collectAsState()
     val scrollState = rememberScrollState()
     val posterUrl = "https://image.tmdb.org/t/p/w500"
 
-    LaunchedEffect(movieId) {
-        viewModel.getMovieDetails(movieId)
+    LaunchedEffect(serieId) {
+        viewModel.getSerieDetails(serieId)
     }
 
-    movieDetails?.let { movieDetails ->
-        val castMembers = movieDetails.credits.cast.take(9)
+    serieDetails?.let { serie ->
+        val castMembers = serie.credits.cast.take(9)
 
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .verticalScroll(scrollState)
         ) {
-            if (movieDetails.backdrop_path != null) {
+            if (serie.backdrop_path != null) {
                 AsyncImage(
-                    model = posterUrl + movieDetails.backdrop_path, // L'URL de l'image
+                    model = posterUrl + serie.backdrop_path, // L'URL de l'image
                     contentDescription = "Poster du film",
                     modifier = Modifier
                         .fillMaxWidth()
@@ -55,7 +55,7 @@ fun FilmDetailsScreen(movieId: Int, navController: NavHostController) {
                 Spacer(modifier = Modifier.height(4.dp))
             }
             Text(
-                text = movieDetails.title,
+                text = serie.name,
                 style = MaterialTheme.typography.headlineLarge,
                 modifier = Modifier.padding(7.dp),
                 fontWeight = FontWeight.Bold,
@@ -67,9 +67,9 @@ fun FilmDetailsScreen(movieId: Int, navController: NavHostController) {
                         //.padding(5.dp)
                         .weight(0.4f) //La colone prendra 40% de la ligne
                 ) {
-                    if (movieDetails.poster_path.isNotEmpty()) {
+                    if (serie.poster_path.isNotEmpty()) {
                         AsyncImage(
-                            model = posterUrl + movieDetails.poster_path, // L'URL de l'image
+                            model = posterUrl + serie.poster_path, // L'URL de l'image
                             contentDescription = "Poster du film",
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -82,12 +82,8 @@ fun FilmDetailsScreen(movieId: Int, navController: NavHostController) {
                         .padding(5.dp)
                         .weight(0.6f)
                 ) {
-                    Text(
-                        text = movieDetails.release_date,
-                        style = MaterialTheme.typography.bodyMedium.copy(
-                            fontSize = 18.sp)
-                    )
-                    val genreNames = movieDetails.genres.joinToString(", ") { it.name }
+
+                    val genreNames = serie.genres.joinToString(", ") { it.name }
                     Text(text = genreNames, style = MaterialTheme.typography.bodyMedium.copy(
                         fontSize = 18.sp,
                         fontStyle = androidx.compose.ui.text.font.FontStyle.Italic))
@@ -95,7 +91,7 @@ fun FilmDetailsScreen(movieId: Int, navController: NavHostController) {
             }
             Spacer(modifier = Modifier.height(10.dp))
 
-            if (movieDetails.overview.isNotEmpty()){
+            if (serie.overview.isNotEmpty()){
                 Text(
                     text = "Synopsis",
                     style = MaterialTheme.typography.headlineMedium,
@@ -103,7 +99,7 @@ fun FilmDetailsScreen(movieId: Int, navController: NavHostController) {
                     fontWeight = FontWeight.SemiBold
                 )
                 Text(
-                    text = movieDetails.overview,
+                    text = serie.overview,
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(15.dp),
                     textAlign = TextAlign.Justify,
@@ -114,22 +110,20 @@ fun FilmDetailsScreen(movieId: Int, navController: NavHostController) {
 
             Text(text = "Têtes d'affiche", style = MaterialTheme.typography.headlineMedium,fontWeight = FontWeight.SemiBold)
 
-            for(actorSeparate in castMembers.chunked(3)){
+            for(separate in castMembers.chunked(3)){
                 Row (
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ){
-                    for (a in actorSeparate)
+                    for (s in separate)
                         Column (
                             modifier = Modifier.weight(0.33f),
                         )  {
-                            ActorItem(actor = a, posterUrl = posterUrl, navController)
+                            ActorItem(actor = s, posterUrl = posterUrl, navController)
                         }
                 }
             }
 
         }
     }
-
-
 }

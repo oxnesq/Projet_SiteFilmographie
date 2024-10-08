@@ -27,7 +27,7 @@ interface TmdbApi {
     suspend fun actorDetails(@Path("id") id: String, @Query("api_key") api_key: String,@Query("language") language: String, @Query("append_to_response") appendToResponse: String ): ModelActor
 
     @GET("tv/{id}")
-    suspend fun serieDetails(@Path("id") id: String,@Query("api_key") api_key: String, @Query("language") language: String): ModelSerie
+    suspend fun serieDetails(@Path("id") id: String,@Query("api_key") api_key: String, @Query("language") language: String, @Query("append_to_response") appendToResponse: String ): ModelSerie
 
     // CHERCHER DES FILMS ACTEURS SERIES AVEC MOTS CLES
     @GET("search/movie")

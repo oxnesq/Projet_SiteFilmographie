@@ -39,11 +39,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-
+import androidx.navigation.NavHostController
 
 
 @Composable
-fun SerieScreen(searchQuery: TextFieldValue) {
+fun SerieScreen(searchQuery: TextFieldValue,navController: NavHostController) {
     val viewModel: MainViewModel = viewModel()
     val series by viewModel.series.collectAsState()
     val posterUrl = "https://image.tmdb.org/t/p/w500"
@@ -56,10 +56,6 @@ fun SerieScreen(searchQuery: TextFieldValue) {
             viewModel.searchSeries(searchQuery.text)
         }
     }
-
-    if (selectedSerie!=null){
-        SerieDescription(selectedSerie!!,posterUrl)
-    } else {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -81,22 +77,22 @@ fun SerieScreen(searchQuery: TextFieldValue) {
                 horizontalArrangement = Arrangement.spacedBy(8.dp) // Espace entre les colonnes
             ) {
                 items(series) { serie ->
-                    SerieItem(serie, posterUrl, onClick = { selectedSerie = serie })
+                    SerieItem(serie, posterUrl, navController )
                 }
             }
         }
     }
-}
+
 
 
 @Composable
-fun SerieItem(serie: ModelSerie, posterUrl: String, onClick: () -> Unit) {
+fun SerieItem(serie: ModelSerie, posterUrl: String,navController:NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .height(350.dp)
             .padding(8.dp)
-            .clickable { onClick() }
+            .clickable { navController.navigate("serieDetails/${serie.id}")}
     ) {
         if (serie.poster_path != null) {
             AsyncImage(
@@ -107,28 +103,5 @@ fun SerieItem(serie: ModelSerie, posterUrl: String, onClick: () -> Unit) {
         }
         Text(text = serie.name, style = MaterialTheme.typography.titleLarge)
         Text(text= serie.first_air_date, style=MaterialTheme.typography.bodySmall)
-    }
-}
-
-
-@Composable
-fun SerieDescription(serie : ModelSerie, posterUrl: String) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(330.dp)
-            .padding(8.dp)
-    ) {
-        Text(text = serie.name, style = MaterialTheme.typography.titleLarge)
-        Spacer(modifier = Modifier.height(4.dp))
-        Row {
-            AsyncImage(
-                model = posterUrl + serie.poster_path, // L'URL de l'image
-                contentDescription = "Poster de la Serie",
-            )
-            //Text(text= serie.release_date, style=MaterialTheme.typography.bodySmall)
-
-        }
-
     }
 }

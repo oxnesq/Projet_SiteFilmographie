@@ -17,6 +17,8 @@ class MainViewModel : ViewModel() {
     val actorDetails: StateFlow<ModelActor?> get() = _actorDetails
     private val _movieDetails = MutableStateFlow<ModelMovie?>(null)
     val movieDetails: StateFlow<ModelMovie?> get() = _movieDetails
+    private val _serieDetails = MutableStateFlow<ModelSerie?>(null)
+    val serieDetails: StateFlow<ModelSerie?> get() = _serieDetails
 
 
     val retrofit = Retrofit.Builder()
@@ -74,6 +76,13 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch {
             val movieDetailResponse = api.movieDetails(id.toString(),api_key,"fr","credits")
             _movieDetails.value = movieDetailResponse
+        }
+    }
+
+    fun getSerieDetails(id: Int){
+        viewModelScope.launch {
+            val serieDetailResponse = api.serieDetails(id.toString(),api_key,"fr","credits")
+            _serieDetails.value = serieDetailResponse
         }
     }
 

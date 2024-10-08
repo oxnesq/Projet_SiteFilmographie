@@ -8,38 +8,39 @@ data class ModelListSerie(
 )
 
 data class ModelSerie(
-    val adult: Boolean,
-    val backdrop_path: String,
-    val created_by: List<CreatedBy>,
-    val episode_run_time: List<Any>,
-    val first_air_date: String,
-    val genres: List<Genre>,
-    val homepage: String,
-    val id: Int,
-    val in_production: Boolean,
-    val languages: List<String>,
-    val last_air_date: String,
-    val last_episode_to_air: LastEpisodeToAir,
-    val name: String,
-    val networks: List<Network>,
-    val next_episode_to_air: NextEpisodeToAir,
-    val number_of_episodes: Int,
-    val number_of_seasons: Int,
-    val origin_country: List<String>,
-    val original_language: String,
-    val original_name: String,
-    val overview: String,
-    val popularity: Double,
-    val poster_path: String,
-    val production_companies: List<ProductionCompany>,
-    val production_countries: List<ProductionCountry>,
-    val seasons: List<Season>,
-    val spoken_languages: List<SpokenLanguage>,
-    val status: String,
-    val tagline: String,
-    val type: String,
-    val vote_average: Double,
-    val vote_count: Int
+    val adult: Boolean = false,
+    val backdrop_path: String = "",
+    val created_by: List<CreatedBy> = listOf(),
+    val credits: Credits ,
+    val episode_run_time: List<Any> = listOf(),
+    val first_air_date: String = "",
+    val genres: List<Genre> = listOf(),
+    val homepage: String = "",
+    val id: Int = 0,
+    val in_production: Boolean = false,
+    val languages: List<String> = listOf(),
+    val last_air_date: String = "",
+    //val last_episode_to_air: LastEpisodeToAir = LastEpisodeToAir(),
+    val name: String = "",
+    val networks: List<Network> = listOf(),
+    val next_episode_to_air: Any = Any(),
+    val number_of_episodes: Int = 0,
+    val number_of_seasons: Int = 0,
+    val origin_country: List<String> = listOf(),
+    val original_language: String = "",
+    val original_name: String = "",
+    val overview: String = "",
+    val popularity: Double = 0.0,
+    val poster_path: String = "",
+    val production_companies: List<ProductionCompany> = listOf(),
+    val production_countries: List<ProductionCountry> = listOf(),
+    val seasons: List<Season> = listOf(),
+    val spoken_languages: List<SpokenLanguage> = listOf(),
+    val status: String = "",
+    val tagline: String = "",
+    val type: String = "",
+    val vote_average: Double = 0.0,
+    val vote_count: Int = 0
 )
 
 data class CreatedBy(
@@ -136,7 +137,7 @@ data class ModelActor(
     val also_known_as: List<String> = listOf(),
     val biography: String = "",
     val birthday: String = "",
-    val credits: Credits = Credits(),
+    val credits: CreditsActor = CreditsActor(),
     val deathday: Any = Any(),
     val gender: Int = 0,
     val homepage: Any = Any(),
@@ -149,7 +150,7 @@ data class ModelActor(
     val profile_path: String = ""
 )
 
-data class Credits(
+data class CreditsActor(
     val cast: List<ModelMovie> = listOf(),
     val crew: List<CrewActor> = listOf()
 )
@@ -186,7 +187,7 @@ data class ModelMovie(
     val backdrop_path: String,
     val belongs_to_collection: BelongsToCollectionMovie,
     val budget: Int,
-    val credits: CreditsMovie,
+    val credits: Credits,
     val genres: List<Genre>,
     val homepage: String,
     val id: Int,
@@ -218,7 +219,7 @@ data class BelongsToCollectionMovie(
     val poster_path: String
 )
 
-data class CreditsMovie(
+data class Credits(
     val cast: List<ModelActor>,
     val crew: List<Crew>
 )

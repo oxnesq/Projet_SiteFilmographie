@@ -27,6 +27,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -85,18 +87,21 @@ fun ActorDetailsScreen(actorId: Int, navController: NavHostController) {
             Text(
                 text = actor.name,
                 style = MaterialTheme.typography.headlineLarge,
+                fontWeight = FontWeight.Bold,
                 modifier = Modifier.align(Alignment.CenterHorizontally),
             )
             Spacer(modifier = Modifier.height(14.dp))
-            Text(text = "Biographie", style = MaterialTheme.typography.titleLarge)
-            Text(
-                text = actor.biography,
-                style = MaterialTheme.typography.bodyMedium,
-                textAlign = TextAlign.Justify,
-            )
+            if (actor.biography.isNotEmpty()){
+                Text(text = "Biographie", style = MaterialTheme.typography.titleLarge,fontWeight = FontWeight.SemiBold)
+                Text(
+                    text = actor.biography,
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Justify,
+                )
+            }
 
             Spacer(modifier = Modifier.height(14.dp))
-            Text(text = "Filmographie", style = MaterialTheme.typography.titleLarge)
+            Text(text = "Filmographie", style = MaterialTheme.typography.titleLarge,fontWeight = FontWeight.SemiBold)
 
             for(separate in filmography.chunked(3)){
                 Row (

@@ -4,9 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -15,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material3.*
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.getValue
@@ -27,6 +25,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -38,6 +37,7 @@ import androidx.compose.foundation.Image as Image
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import androidx.window.core.layout.WindowWidthSizeClass
 
 @Serializable
 class Home
@@ -57,6 +57,9 @@ class FilmDetails()
 @Serializable
 class ActorDetails()
 
+@Serializable
+class serieDetails()
+
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -72,6 +75,9 @@ class MainActivity : ComponentActivity() {
                 var searchQuery by remember { mutableStateOf(TextFieldValue("")) }
                 var isSearching by remember { mutableStateOf(false) }
 
+                val classeLargeur = windowSizeClass.windowWidthSizeClass
+
+
                 Scaffold(
                     topBar = {
                         if (currentDestination?.hasRoute<Home>() != true) {
@@ -83,14 +89,18 @@ class MainActivity : ComponentActivity() {
                                     if (isSearching) {
                                         TextField(
                                             value = searchQuery,
-                                            onValueChange = { newValue -> searchQuery = newValue },
+                                            onValueChange = { newValue ->
+                                                searchQuery = newValue
+                                            },
                                             modifier = Modifier
                                                 .fillMaxWidth()
                                                 .padding(horizontal = 8.dp),
                                             placeholder = { Text(text = "Rechercher...") },
                                             trailingIcon = {
                                                 if (searchQuery.text.isNotEmpty()) {
-                                                    IconButton(onClick = { searchQuery = TextFieldValue("") }) {
+                                                    IconButton(onClick = {
+                                                        searchQuery = TextFieldValue("")
+                                                    }) {
                                                         Icon(
                                                             imageVector = Icons.Default.Close, // Icône pour effacer la recherche
                                                             contentDescription = "Clear Icon",
@@ -116,18 +126,21 @@ class MainActivity : ComponentActivity() {
                                 },
                                 navigationIcon = {
                                     IconButton(onClick = {
-                                        if (isSearching) {
-                                            // Si en mode recherche, la flèche revient à l'état initial
+                                        if (findIfDetails(currentDestination)) {
+                                            // Si on est sur une page de détails, naviguer vers la page précédente
+                                            navController.popBackStack()
+                                        } else if (isSearching) {
+
                                             isSearching = false
                                             searchQuery =
                                                 TextFieldValue("") // Réinitialiser la recherche
                                         } else {
-                                            // Si pas en mode recherche, passer en mode recherche
                                             isSearching = true
                                         }
+
                                     }) {
                                         // Afficher la flèche retour si on est en mode recherche, sinon la loupe
-                                        if (isSearching) {
+                                        if (isSearching || findIfDetails(currentDestination)) {
                                             Icon(
                                                 imageVector = Icons.Filled.ArrowBack,  // Icône Material Design pour l'email
                                                 contentDescription = "Email",
@@ -142,9 +155,24 @@ class MainActivity : ComponentActivity() {
                                             )
                                         }
                                     }
+                                },
+                                actions = {
+                                    IconButton(onClick = {
+                                        navController.navigate(Home())
+                                    }) {
+                                        Icon(
+                                            imageVector = Icons.Outlined.Home,  // Icône Material Design pour l'email
+                                            contentDescription = "Home page",
+                                            modifier = Modifier
+                                                .size(28.dp),
+                                            tint = Color.Black
+                                        )
+                                    }
 
-                                }
-                            )
+                                },
+
+
+                                )
                         }
                     },
 
@@ -202,40 +230,61 @@ class MainActivity : ComponentActivity() {
                     ) {
                         composable<Home> { HomeScreen(windowSizeClass, navController) }
                         composable<Film> { FilmScreen(searchQuery, navController) }
-                        composable<Serie> { SerieScreen(searchQuery) }
+                        composable<Serie> { SerieScreen(searchQuery, navController) }
                         composable<Actor> { ActorScreen(searchQuery, navController) }
 
                         composable(
                             "movieDetails/{movieId}",
-                            arguments = listOf(navArgument("movieId") { type = NavType.IntType })
+                            arguments = listOf(navArgument("movieId") {
+                                type = NavType.IntType
+                            })
                         ) { backStackEntry ->
                             val movieId = backStackEntry.arguments?.getInt("movieId")
                             movieId?.let {
-                                FilmDetailsScreen( movieId = it, navController)
-                                }
+                                FilmDetailsScreen(movieId = it, navController)
                             }
+                        }
 
                         composable(
                             "actorDetails/{actorId}",
-                            arguments = listOf(navArgument("actorId") { type = NavType.IntType })
+                            arguments = listOf(navArgument("actorId") {
+                                type = NavType.IntType
+                            })
                         ) { backStackEntry ->
                             val actorId = backStackEntry.arguments?.getInt("actorId")
                             actorId?.let {
-                                ActorDetailsScreen( actorId = it, navController)
+                                ActorDetailsScreen(actorId = it, navController)
+                            }
+                        }
+
+                        composable(
+                            "serieDetails/{serieId}",
+                            arguments = listOf(navArgument("serieId") {
+                                type = NavType.IntType
+                            })
+                        ) { backStackEntry ->
+                            val serieId = backStackEntry.arguments?.getInt("serieId")
+                            serieId?.let {
+                                SerieDetailsScreen(serieId = it, navController)
                             }
                         }
 
                     }
-                }
 
+                }
             }
 
         }
     }
 }
 
-fun onSearch(searchQuery: TextFieldValue) {
-    println("Recherche en cours pour : ${searchQuery.text}")
+
+fun findIfDetails(currentDestination: NavDestination?): Boolean {
+    var bo: Boolean
+    bo = false
+    if (currentDestination?.route?.startsWith("movieDetails") == true ||
+        currentDestination?.route?.startsWith("actorDetails") == true ||
+        currentDestination?.route?.startsWith("serieDetails") == true
+    ) bo = true
+    return bo
 }
-
-
