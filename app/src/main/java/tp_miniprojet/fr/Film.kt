@@ -84,7 +84,7 @@ fun MovieItem(movie: ModelMovie, posterUrl: String, navController: NavHostContro
             .fillMaxWidth()
             .height(330.dp)
             .padding(8.dp)
-            .clickable { navController.navigate("movieDetails/{movieId}")}
+            .clickable { navController.navigate("movieDetails/${movie.id}")}
     ) {
         AsyncImage(
             model = posterUrl + movie.poster_path, // L'URL de l'image
