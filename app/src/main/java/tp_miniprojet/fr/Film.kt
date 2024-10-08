@@ -78,7 +78,6 @@ fun FilmScreen(searchQuery: TextFieldValue, navController: NavHostController) {
 
 @Composable
 fun MovieItem(movie: ModelMovie, posterUrl: String, navController: NavHostController) {
-    // Affichage d'un élément de film avec son titre et son synopsis
     Column(
         modifier = Modifier
             .fillMaxWidth()

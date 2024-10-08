@@ -1,6 +1,8 @@
 package tp_miniprojet.fr
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -10,37 +12,46 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 
 @Composable
-fun FilmDetailsScreen(movieId: Int) {
+fun FilmDetailsScreen(movieId: Int, navController: NavHostController) {
     val viewModel: MainViewModel = viewModel()
     val movieDetails by viewModel.movieDetails.collectAsState()
     val scrollState = rememberScrollState()
     val posterUrl = "https://image.tmdb.org/t/p/w500"
-    //val castMembers = movieDetails!!.credits.cast.take(9)
 
     LaunchedEffect(movieId) {
         viewModel.getMovieDetails(movieId)
     }
 
     movieDetails?.let { movieDetails ->
+        val castMembers = movieDetails.credits.cast.take(9)
 
         Column(
             modifier = Modifier
@@ -108,22 +119,20 @@ fun FilmDetailsScreen(movieId: Int) {
             Spacer(modifier = Modifier.height(10.dp))
             Text(text = "Têtes d'affiche", style = MaterialTheme.typography.headlineMedium)
 
-            /*
-
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(3), // Définir 3 colonnes
-                        modifier = Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(5.dp),
-                        horizontalArrangement = Arrangement.spacedBy(5.dp) // Espace entre les colonnes
-                    ) {
-                        items(castMembers) { actor ->
-
-                            ActorItem(actor = actor, posterUrl = posterUrl, onClick = {
-                                // Action à définir, par exemple afficher les détails de l'acteur
-                            })
+            for(actorSeparate in castMembers.chunked(3)){
+                Row (
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ){
+                    for (a in actorSeparate)
+                        Column (
+                            modifier = Modifier.weight(0.33f),
+                        )  {
+                            ActorItem(actor = a, posterUrl = posterUrl, navController)
                         }
-                    }*/
+                }
+            }
+
         }
     }
 

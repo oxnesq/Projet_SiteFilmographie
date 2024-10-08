@@ -4,6 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -50,6 +53,10 @@ class Actor()
 
 @Serializable
 class FilmDetails()
+
+@Serializable
+class ActorDetails()
+
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -196,7 +203,7 @@ class MainActivity : ComponentActivity() {
                         composable<Home> { HomeScreen(windowSizeClass, navController) }
                         composable<Film> { FilmScreen(searchQuery, navController) }
                         composable<Serie> { SerieScreen(searchQuery) }
-                        composable<Actor> { ActorScreen(searchQuery) }
+                        composable<Actor> { ActorScreen(searchQuery, navController) }
 
                         composable(
                             "movieDetails/{movieId}",
@@ -204,9 +211,20 @@ class MainActivity : ComponentActivity() {
                         ) { backStackEntry ->
                             val movieId = backStackEntry.arguments?.getInt("movieId")
                             movieId?.let {
-                                FilmDetailsScreen( movieId = it)
+                                FilmDetailsScreen( movieId = it, navController)
                                 }
                             }
+
+                        composable(
+                            "actorDetails/{actorId}",
+                            arguments = listOf(navArgument("actorId") { type = NavType.IntType })
+                        ) { backStackEntry ->
+                            val actorId = backStackEntry.arguments?.getInt("actorId")
+                            actorId?.let {
+                                ActorDetailsScreen( actorId = it, navController)
+                            }
+                        }
+
                     }
                 }
 
@@ -219,4 +237,5 @@ class MainActivity : ComponentActivity() {
 fun onSearch(searchQuery: TextFieldValue) {
     println("Recherche en cours pour : ${searchQuery.text}")
 }
+
 
