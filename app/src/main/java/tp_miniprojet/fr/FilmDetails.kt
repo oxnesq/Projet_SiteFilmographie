@@ -116,12 +116,14 @@ fun FilmDetailsScreen(movieId: Int, navController: NavHostController) {
 
             for(actorSeparate in castMembers.chunked(3)){
                 Row (
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(16.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ){
                     for (a in actorSeparate)
                         Column (
-                            modifier = Modifier.weight(0.33f),
+                            modifier = Modifier.weight(0.33f)
+                                ,
                         )  {
                             ActorItem(actor = a, posterUrl = posterUrl, navController)
                             Text(
