@@ -38,23 +38,15 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.window.core.layout.WindowSizeClass
-import androidx.window.core.layout.WindowWidthSizeClass
 
 
 @Composable
-fun ActorScreen(
-    searchQuery: TextFieldValue,
-    navController: NavHostController,
-    classes: WindowSizeClass
-) {
+fun ActorScreen(searchQuery: TextFieldValue, navController: NavHostController) {
     val viewModel: MainViewModel = viewModel()
     val actors by viewModel.actors.collectAsState()
     val posterUrl = "https://image.tmdb.org/t/p/w500"
     var selectedActor by remember { mutableStateOf<ModelActor?>(null) }
     val actorDetails by viewModel.actorDetails.collectAsState()
-    val classeLargeur = classes.windowWidthSizeClass
-
 
     LaunchedEffect(searchQuery.text) {
         if (searchQuery.text == "") {
@@ -65,40 +57,31 @@ fun ActorScreen(
     }
 
 
-    when (classeLargeur) {
-        WindowWidthSizeClass.COMPACT -> {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp)
-            ) {
-                TitleClass("Acteurs")
 
-                CommonLazyVerticalGridPortrait {
-                    items(actors) { actor ->
-                        ActorItem(actor, posterUrl, navController)
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        Text(
+            text = "Acteurs", // Le titre
+            style = MaterialTheme.typography.headlineLarge,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .padding(bottom = 16.dp)
+        )
 
-                    }
-                }
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2), // Définir 2 colonnes
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp) // Espace entre les colonnes
+        ) {
+            items(actors) { actor ->
+                ActorItem(actor, posterUrl,navController)
+
             }
-        }
-
-        else -> {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp)
-            ) {
-                TitleClass("Acteurs")
-
-                CommonLazyVerticalGridLandscape {
-                    items(actors) { actor ->
-                        ActorItem(actor, posterUrl, navController)
-
-                    }
-                }
-            }
-
         }
     }
 }

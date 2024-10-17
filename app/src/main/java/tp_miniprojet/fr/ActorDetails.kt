@@ -105,8 +105,7 @@ fun ActorDetailsScreen(actorId: Int, navController: NavHostController) {
 
             for(separate in filmography.chunked(3)){
                 Row (
-                    modifier = Modifier.fillMaxWidth()
-                        .padding(16.dp),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ){
                     for (s in separate)

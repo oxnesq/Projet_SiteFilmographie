@@ -47,10 +47,10 @@ fun HomeScreen(classes: WindowSizeClass, navController: NavController) {
         WindowWidthSizeClass.COMPACT -> /* largeur faible */ {
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxSize()  // Remplit tout l'écran
                     .padding(16.dp),
                 verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally  // Centre horizontalement les éléments
             ) {
                 ImageProfile()
                 Spacer(modifier = Modifier.height(5.dp))

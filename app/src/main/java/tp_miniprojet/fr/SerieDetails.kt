@@ -112,8 +112,7 @@ fun SerieDetailsScreen(serieId: Int, navController: NavHostController) {
 
             for(separate in castMembers.chunked(3)){
                 Row (
-                    modifier = Modifier.fillMaxWidth()
-                        .padding(7.dp),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ){
                     for (s in separate)
