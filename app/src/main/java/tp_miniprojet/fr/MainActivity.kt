@@ -4,12 +4,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
@@ -23,9 +21,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.material3.NavigationBarItemDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
@@ -190,7 +185,6 @@ class MainActivity : ComponentActivity() {
                                 containerColor = Color(0xFF2196F3),
                                 contentColor = Color.Black,
 
-
                                 ) {
                                 NavigationBarItem(
                                     icon = {
@@ -199,24 +193,10 @@ class MainActivity : ComponentActivity() {
                                             contentDescription = "Film logo",
                                             modifier = Modifier
                                                 .size(20.dp),
-                                            colorFilter = if (currentDestination?.hasRoute<Film>() == true) {
-                                                ColorFilter.tint(Color.Black) // Couleur de l'icône quand sélectionné
-                                            } else {
-                                                ColorFilter.tint(Color.DarkGray) // Couleur de l'icône quand non sélectionné
-                                            }
                                         )
-                                    },
-                                    label = {
-                                        Text(
-                                            text = "Films",
-                                            )
-                                    },
+                                    }, label = { Text("Films") },
                                     selected = currentDestination?.hasRoute<Film>() == true,
-                                    colors = NavigationBarItemDefaults.colors(
-                                        indicatorColor = Color(0xFF2264FF)
-                                    ),
                                     onClick = { navController.navigate(Film()) })
-
                                 NavigationBarItem(
                                     icon = {
                                         Image(
@@ -224,17 +204,9 @@ class MainActivity : ComponentActivity() {
                                             contentDescription = "Series logo",
                                             modifier = Modifier
                                                 .size(20.dp),
-                                            colorFilter = if (currentDestination?.hasRoute<Serie>() == true) {
-                                                ColorFilter.tint(Color.Black) // Couleur de l'icône quand sélectionné
-                                            } else {
-                                                ColorFilter.tint(Color.DarkGray) // Couleur de l'icône quand non sélectionné
-                                            }
                                         )
                                     }, label = { Text("Series") },
                                     selected = currentDestination?.hasRoute<Serie>() == true,
-                                    colors = NavigationBarItemDefaults.colors(
-                                        indicatorColor = Color(0xFF2264FF)
-                                    ),
                                     onClick = { navController.navigate(Serie()) })
                                 NavigationBarItem(
                                     icon = {
@@ -243,14 +215,10 @@ class MainActivity : ComponentActivity() {
                                             contentDescription = "Actors",
                                             modifier = Modifier
                                                 .size(20.dp),
-                                            tint = if (currentDestination?.hasRoute<Actor>() == true) Color.Black else Color.DarkGray
-
+                                            Color.Black,
                                         )
                                     }, label = { Text("Acteurs") },
                                     selected = currentDestination?.hasRoute<Actor>() == true,
-                                    colors = NavigationBarItemDefaults.colors(
-                                        indicatorColor = Color(0xFF2264FF)
-                                    ),
                                     onClick = { navController.navigate(Actor()) })
                             }
                         }
