@@ -1,5 +1,15 @@
 package tp_miniprojet.fr
 
+
+interface Card {
+    fun getTitleCard() : String;
+    fun getIdCard() : Int;
+    fun getPosterPathCard() : String;
+    fun getOverviewCard() : String;
+
+}
+
+
 data class ModelListSerie(
     val results: List<ModelSerie> = listOf(),
 )
@@ -13,8 +23,12 @@ data class ModelSerie(
     val overview: String = "",
     val popularity: Double = 0.0,
     val poster_path: String = "",
-)
-
+) : Card{
+    override fun getTitleCard() = name
+    override fun getIdCard() = id
+    override fun getPosterPathCard() = poster_path
+    override fun getOverviewCard() = overview
+}
 
 
 data class ModelListActor(
@@ -29,7 +43,12 @@ data class ModelActor(
     val popularity: Double = 0.0,
     val profile_path: String = "",
     val character: String =""
-)
+): Card{
+    override fun getTitleCard() = name
+    override fun getIdCard() = id
+    override fun getPosterPathCard() = profile_path
+    override fun getOverviewCard() = biography
+}
 
 
 data class CreditsActor(
@@ -49,7 +68,12 @@ data class ModelMovie(
     val poster_path: String = "",
     val release_date: String = "",
     val title: String="",
-)
+) : Card{
+    override fun getTitleCard() = title
+    override fun getIdCard() = id
+    override fun getPosterPathCard() = poster_path
+    override fun getOverviewCard() = overview
+}
 
 data class Credits(
     val cast: List<ModelActor> = listOf()

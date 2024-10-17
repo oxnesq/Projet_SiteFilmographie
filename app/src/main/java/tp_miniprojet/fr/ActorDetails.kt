@@ -112,7 +112,7 @@ fun ActorDetailsScreen(actorId: Int, navController: NavHostController) {
                         Column (
                             modifier = Modifier.weight(0.33f),
                         )  {
-                            MovieItem(movie = s, posterUrl = posterUrl, navController)
+                            CardItem( s, navController,"movie")
                         }
                 }
             }

@@ -44,7 +44,6 @@ import androidx.navigation.NavHostController
 fun ActorScreen(searchQuery: TextFieldValue, navController: NavHostController) {
     val viewModel: MainViewModel = viewModel()
     val actors by viewModel.actors.collectAsState()
-    val posterUrl = "https://image.tmdb.org/t/p/w500"
     var selectedActor by remember { mutableStateOf<ModelActor?>(null) }
     val actorDetails by viewModel.actorDetails.collectAsState()
 
@@ -79,7 +78,6 @@ fun ActorItem(actor: ModelActor, posterUrl: String, navController: NavHostContro
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            //.height(330.dp)
             .padding(8.dp)
             .clickable { navController.navigate("actorDetails/${actor.id}") }
     ) {

@@ -46,7 +46,6 @@ import androidx.navigation.NavHostController
 fun SerieScreen(searchQuery: TextFieldValue,navController: NavHostController) {
     val viewModel: MainViewModel = viewModel()
     val series by viewModel.series.collectAsState()
-    val posterUrl = "https://image.tmdb.org/t/p/w500"
     var selectedSerie by remember { mutableStateOf<ModelSerie?>(null) }
 
     LaunchedEffect(searchQuery.text) {

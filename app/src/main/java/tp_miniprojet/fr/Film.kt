@@ -51,52 +51,9 @@ fun FilmScreen(searchQuery: TextFieldValue, navController: NavHostController) {
     }
 
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        TitleClass("Films")
-        CommonLazyVerticalGridPortrait {
-            items(movies) { movie ->
-                MovieItem(movie, posterUrl,navController )
-            }
-        }
-    }
+    GridObjects(movies, navController,"movie")
 }
 
-
-@Composable
-fun MovieItem(movie: ModelMovie, posterUrl: String, navController: NavHostController) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(340.dp)
-            //.padding(8.dp)
-            .clickable { navController.navigate("movieDetails/${movie.id}")},
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        if (!movie.poster_path.isNullOrEmpty()){
-            AsyncImage(
-                model = posterUrl + movie.poster_path, // L'URL de l'image
-                contentDescription = "Poster du film",
-            )
-        } else {
-            Image(
-                painter = painterResource(R.drawable.galery),  // Image locale dans drawable
-                contentDescription = "Film logo",
-                modifier = Modifier
-                    .size(50.dp)
-            )
-
-        }
-
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(text = movie.title, style = MaterialTheme.typography.titleMedium.copy(fontSize = 22.sp), modifier = Modifier.align(Alignment.Start))
-        Text(text = movie.release_date, style = MaterialTheme.typography.bodySmall, modifier = Modifier.align(Alignment.Start))
-    }
-}
 
 
 
