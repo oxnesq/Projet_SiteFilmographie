@@ -39,7 +39,6 @@ import tp_premiereapplication.fr.R
 fun FilmScreen(searchQuery: TextFieldValue, navController: NavHostController) {
     val viewModel: MainViewModel = viewModel()
     val movies by viewModel.movies.collectAsState()
-    val posterUrl = "https://image.tmdb.org/t/p/w500"
 
 
     LaunchedEffect(searchQuery.text) {
@@ -57,21 +56,8 @@ fun FilmScreen(searchQuery: TextFieldValue, navController: NavHostController) {
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Text(
-            text = "Films", // Le titre
-            style = MaterialTheme.typography.headlineLarge,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .padding(bottom = 16.dp)
-        )
-
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2), // Définir 2 colonnes
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(5.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp) // Espace entre les colonnes
-        ) {
+        TitleClass("Films")
+        CommonLazyVerticalGridPortrait {
             items(movies) { movie ->
                 MovieItem(movie, posterUrl,navController )
             }

@@ -61,21 +61,8 @@ fun SerieScreen(searchQuery: TextFieldValue,navController: NavHostController) {
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            Text(
-                text = "Series", // Le titre
-                style = MaterialTheme.typography.headlineLarge,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .padding(bottom = 16.dp)
-            )
-
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2), // Définir 2 colonnes
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp) // Espace entre les colonnes
-            ) {
+            TitleClass("Series")
+            CommonLazyVerticalGridPortrait {
                 items(series) { serie ->
                     SerieItem(serie, posterUrl, navController )
                 }
@@ -102,6 +89,6 @@ fun SerieItem(serie: ModelSerie, posterUrl: String,navController:NavHostControll
             Spacer(modifier = Modifier.height(4.dp))
         }
         Text(text = serie.name, style = MaterialTheme.typography.titleLarge)
-        Text(text= serie.first_air_date, style=MaterialTheme.typography.bodySmall)
+        //Text(text= serie.first_air_date, style=MaterialTheme.typography.bodySmall)
     }
 }

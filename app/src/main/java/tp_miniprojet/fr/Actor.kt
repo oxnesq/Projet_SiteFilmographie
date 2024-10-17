@@ -63,21 +63,8 @@ fun ActorScreen(searchQuery: TextFieldValue, navController: NavHostController) {
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Text(
-            text = "Acteurs", // Le titre
-            style = MaterialTheme.typography.headlineLarge,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .padding(bottom = 16.dp)
-        )
-
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2), // Définir 2 colonnes
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp) // Espace entre les colonnes
-        ) {
+        TitleClass("Acteurs")
+        CommonLazyVerticalGridPortrait {
             items(actors) { actor ->
                 ActorItem(actor, posterUrl,navController)
 
