@@ -65,6 +65,7 @@ class ActorDetails()
 @Serializable
 class serieDetails()
 
+//TEST
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
