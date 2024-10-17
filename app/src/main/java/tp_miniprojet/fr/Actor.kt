@@ -93,7 +93,7 @@ fun ActorItem(actor: ModelActor, posterUrl: String, navController: NavHostContro
         modifier = Modifier
             .fillMaxWidth()
             //.height(330.dp)
-            //.padding(8.dp)
+            .padding(8.dp)
             .clickable { navController.navigate("actorDetails/${actor.id}") }
     ) {
         if (actor.profile_path != null) {
