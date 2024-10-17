@@ -87,145 +87,153 @@ class MainActivity : ComponentActivity() {
 
                 Scaffold(
                     topBar = {
-                        if (currentDestination?.hasRoute<Home>() != true) {
-                            TopAppBar(
-                                colors = TopAppBarDefaults.smallTopAppBarColors(
-                                    containerColor = Color(0xFF2196F3)
-                                ),
-                                title = {
-                                    if (isSearching) {
-                                        TextField(
-                                            value = searchQuery,
-                                            onValueChange = { newValue ->
-                                                searchQuery = newValue
-                                            },
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .padding(horizontal = 8.dp),
-                                            placeholder = { Text(text = "Rechercher...") },
-                                            trailingIcon = {
-                                                if (searchQuery.text.isNotEmpty()) {
-                                                    IconButton(onClick = {
-                                                        searchQuery = TextFieldValue("")
-                                                    }) {
-                                                        Icon(
-                                                            imageVector = Icons.Default.Close, // Icône pour effacer la recherche
-                                                            contentDescription = "Clear Icon",
-                                                            tint = Color.Black,
-                                                            modifier = Modifier.size(24.dp)
-                                                        )
-                                                    }
+                        when (classeLargeur) {
+                            WindowWidthSizeClass.COMPACT -> {
+                                if (currentDestination?.hasRoute<Home>() != true) {
+                                    TopAppBar(
+                                        colors = TopAppBarDefaults.smallTopAppBarColors(
+                                            containerColor = Color(0xFF2196F3)
+                                        ),
+                                        title = {
+                                            if (isSearching) {
+                                                TextField(
+                                                    value = searchQuery,
+                                                    onValueChange = { newValue ->
+                                                        searchQuery = newValue
+                                                    },
+                                                    modifier = Modifier
+                                                        .fillMaxWidth()
+                                                        .padding(horizontal = 8.dp),
+                                                    placeholder = { Text(text = "Rechercher...") },
+                                                    trailingIcon = {
+                                                        if (searchQuery.text.isNotEmpty()) {
+                                                            IconButton(onClick = {
+                                                                searchQuery = TextFieldValue("")
+                                                            }) {
+                                                                Icon(
+                                                                    imageVector = Icons.Default.Close, // Icône pour effacer la recherche
+                                                                    contentDescription = "Clear Icon",
+                                                                    tint = Color.Black,
+                                                                    modifier = Modifier.size(24.dp)
+                                                                )
+                                                            }
+                                                        }
+                                                    },
+                                                    colors = TextFieldDefaults.textFieldColors(
+                                                        containerColor = Color.Transparent, // Fond transparent
+                                                    )
+                                                )
+                                            } else {
+                                                // Si on n'est pas en mode recherche, afficher le titre "Fav'App"
+                                                Text(
+                                                    "Cine'App",
+                                                    maxLines = 1,
+                                                    overflow = TextOverflow.Ellipsis,
+                                                    //color = Color.White // Couleur du texte pour le rendre visible
+                                                )
+                                            }
+                                        },
+                                        navigationIcon = {
+                                            IconButton(onClick = {
+                                                if (findIfDetails(currentDestination)) {
+                                                    // Si on est sur une page de détails, naviguer vers la page précédente
+                                                    navController.popBackStack()
+                                                } else if (isSearching) {
+
+                                                    isSearching = false
+                                                    searchQuery =
+                                                        TextFieldValue("") // Réinitialiser la recherche
+                                                } else {
+                                                    isSearching = true
                                                 }
-                                            },
-                                            colors = TextFieldDefaults.textFieldColors(
-                                                containerColor = Color.Transparent, // Fond transparent
-                                            )
+
+                                            }) {
+                                                // Afficher la flèche retour si on est en mode recherche, sinon la loupe
+                                                if (isSearching || findIfDetails(currentDestination)) {
+                                                    Icon(
+                                                        imageVector = Icons.Filled.ArrowBack,  // Icône Material Design pour l'email
+                                                        contentDescription = "Email",
+                                                        modifier = Modifier
+                                                            .size(20.dp)  // Ajuster la taille de l'icône
+                                                    )
+                                                } else {
+                                                    Icon(
+                                                        painter = painterResource(id = R.drawable.magnifier), // Assurez-vous que l'icône est correcte
+                                                        contentDescription = "Rechercher",
+                                                        modifier = Modifier.size(24.dp)
+                                                    )
+                                                }
+                                            }
+                                        },
+                                        actions = {
+                                            IconButton(onClick = {
+                                                navController.navigate(Home())
+                                            }) {
+                                                Icon(
+                                                    imageVector = Icons.Outlined.Home,  // Icône Material Design pour l'email
+                                                    contentDescription = "Home page",
+                                                    modifier = Modifier
+                                                        .size(28.dp),
+                                                    tint = Color.Black
+                                                )
+                                            }
+
+                                        },
+
+
                                         )
-                                    } else {
-                                        // Si on n'est pas en mode recherche, afficher le titre "Fav'App"
-                                        Text(
-                                            "Cine'App",
-                                            maxLines = 1,
-                                            overflow = TextOverflow.Ellipsis,
-                                            //color = Color.White // Couleur du texte pour le rendre visible
-                                        )
-                                    }
-                                },
-                                navigationIcon = {
-                                    IconButton(onClick = {
-                                        if (findIfDetails(currentDestination)) {
-                                            // Si on est sur une page de détails, naviguer vers la page précédente
-                                            navController.popBackStack()
-                                        } else if (isSearching) {
-
-                                            isSearching = false
-                                            searchQuery =
-                                                TextFieldValue("") // Réinitialiser la recherche
-                                        } else {
-                                            isSearching = true
-                                        }
-
-                                    }) {
-                                        // Afficher la flèche retour si on est en mode recherche, sinon la loupe
-                                        if (isSearching || findIfDetails(currentDestination)) {
-                                            Icon(
-                                                imageVector = Icons.Filled.ArrowBack,  // Icône Material Design pour l'email
-                                                contentDescription = "Email",
-                                                modifier = Modifier
-                                                    .size(20.dp)  // Ajuster la taille de l'icône
-                                            )
-                                        } else {
-                                            Icon(
-                                                painter = painterResource(id = R.drawable.magnifier), // Assurez-vous que l'icône est correcte
-                                                contentDescription = "Rechercher",
-                                                modifier = Modifier.size(24.dp)
-                                            )
-                                        }
-                                    }
-                                },
-                                actions = {
-                                    IconButton(onClick = {
-                                        navController.navigate(Home())
-                                    }) {
-                                        Icon(
-                                            imageVector = Icons.Outlined.Home,  // Icône Material Design pour l'email
-                                            contentDescription = "Home page",
-                                            modifier = Modifier
-                                                .size(28.dp),
-                                            tint = Color.Black
-                                        )
-                                    }
-
-                                },
-
-
-                                )
+                                }
+                            }
                         }
                     },
 
                     bottomBar = {
-                        if (currentDestination?.hasRoute<Home>() != true) {
-                            NavigationBar(
-                                modifier = Modifier
-                                    .height(120.dp),
-                                containerColor = Color(0xFF2196F3),
-                                contentColor = Color.Black,
+                        when (classeLargeur) {
+                            WindowWidthSizeClass.COMPACT -> {
+                                if (currentDestination?.hasRoute<Home>() != true) {
+                                    NavigationBar(
+                                        modifier = Modifier
+                                            .height(120.dp),
+                                        containerColor = Color(0xFF2196F3),
+                                        contentColor = Color.Black,
 
-                                ) {
-                                NavigationBarItem(
-                                    icon = {
-                                        Image(
-                                            painter = painterResource(R.drawable.camera),  // Image locale dans drawable
-                                            contentDescription = "Film logo",
-                                            modifier = Modifier
-                                                .size(20.dp),
-                                        )
-                                    }, label = { Text("Films") },
-                                    selected = currentDestination?.hasRoute<Film>() == true,
-                                    onClick = { navController.navigate(Film()) })
-                                NavigationBarItem(
-                                    icon = {
-                                        Image(
-                                            painter = painterResource(R.drawable.film),  // Image locale dans drawable
-                                            contentDescription = "Series logo",
-                                            modifier = Modifier
-                                                .size(20.dp),
-                                        )
-                                    }, label = { Text("Series") },
-                                    selected = currentDestination?.hasRoute<Serie>() == true,
-                                    onClick = { navController.navigate(Serie()) })
-                                NavigationBarItem(
-                                    icon = {
-                                        Icon(
-                                            imageVector = Icons.Filled.Person,  // Icône Material Design pour l'email
-                                            contentDescription = "Actors",
-                                            modifier = Modifier
-                                                .size(20.dp),
-                                            Color.Black,
-                                        )
-                                    }, label = { Text("Acteurs") },
-                                    selected = currentDestination?.hasRoute<Actor>() == true,
-                                    onClick = { navController.navigate(Actor()) })
+                                        ) {
+                                        NavigationBarItem(
+                                            icon = {
+                                                Image(
+                                                    painter = painterResource(R.drawable.camera),  // Image locale dans drawable
+                                                    contentDescription = "Film logo",
+                                                    modifier = Modifier
+                                                        .size(20.dp),
+                                                )
+                                            }, label = { Text("Films") },
+                                            selected = currentDestination?.hasRoute<Film>() == true,
+                                            onClick = { navController.navigate(Film()) })
+                                        NavigationBarItem(
+                                            icon = {
+                                                Image(
+                                                    painter = painterResource(R.drawable.film),  // Image locale dans drawable
+                                                    contentDescription = "Series logo",
+                                                    modifier = Modifier
+                                                        .size(20.dp),
+                                                )
+                                            }, label = { Text("Series") },
+                                            selected = currentDestination?.hasRoute<Serie>() == true,
+                                            onClick = { navController.navigate(Serie()) })
+                                        NavigationBarItem(
+                                            icon = {
+                                                Icon(
+                                                    imageVector = Icons.Filled.Person,  // Icône Material Design pour l'email
+                                                    contentDescription = "Actors",
+                                                    modifier = Modifier
+                                                        .size(20.dp),
+                                                    Color.Black,
+                                                )
+                                            }, label = { Text("Acteurs") },
+                                            selected = currentDestination?.hasRoute<Actor>() == true,
+                                            onClick = { navController.navigate(Actor()) })
+                                    }
+                                }
                             }
                         }
                     }
