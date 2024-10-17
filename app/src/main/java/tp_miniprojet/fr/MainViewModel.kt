@@ -13,12 +13,9 @@ class MainViewModel : ViewModel() {
     val actors = MutableStateFlow<List<ModelActor>>(listOf())
     val series = MutableStateFlow<List<ModelSerie>>(listOf())
     val genres = MutableStateFlow<List<Genre>>(listOf())
-    private val _actorDetails = MutableStateFlow<ModelActor?>(null)
-    val actorDetails: StateFlow<ModelActor?> get() = _actorDetails
-    private val _movieDetails = MutableStateFlow<ModelMovie?>(null)
-    val movieDetails: StateFlow<ModelMovie?> get() = _movieDetails
-    private val _serieDetails = MutableStateFlow<ModelSerie?>(null)
-    val serieDetails: StateFlow<ModelSerie?> get() = _serieDetails
+    val serieDetails = MutableStateFlow(ModelSerie())
+    val movieDetails = MutableStateFlow(ModelMovie())
+    val actorDetails = MutableStateFlow(ModelActor())
 
 
     val retrofit = Retrofit.Builder()
@@ -67,22 +64,19 @@ class MainViewModel : ViewModel() {
 
     fun getActorDetails(id: Int){
         viewModelScope.launch {
-            val actorDetailResponse = api.actorDetails(id.toString(),api_key,"fr","credits")
-            _actorDetails.value = actorDetailResponse
+            actorDetails.value = api.actorDetails(id.toString(),api_key, "fr", "credits")
         }
     }
 
     fun getMovieDetails(id: Int){
         viewModelScope.launch {
-            val movieDetailResponse = api.movieDetails(id.toString(),api_key,"fr","credits")
-            _movieDetails.value = movieDetailResponse
+            movieDetails.value = api.movieDetails(id.toString(),api_key, "fr", "credits")
         }
     }
 
     fun getSerieDetails(id: Int){
         viewModelScope.launch {
-            val serieDetailResponse = api.serieDetails(id.toString(),api_key,"fr","credits")
-            _serieDetails.value = serieDetailResponse
+            serieDetails.value = api.serieDetails(id.toString(),api_key, "fr", "credits")
         }
     }
 
