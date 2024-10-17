@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
@@ -239,6 +241,60 @@ class MainActivity : ComponentActivity() {
                     }
                 )
                 { innerPadding ->
+                    Column() {
+                        when (classeLargeur) {
+                            WindowWidthSizeClass.COMPACT -> {} else->{
+                                if (currentDestination?.hasRoute<Home>() != true) {
+                                    NavigationRail(
+                                        modifier = Modifier
+                                            //.height(50.dp)
+                                            //.width(100.dp)
+                                            .padding(innerPadding),
+                                        containerColor = Color(0xFF2196F3),
+                                        contentColor = Color.Black
+                                    ) {
+                                        NavigationRailItem(
+                                            icon = {
+                                                NavigationImage(
+                                                    currentDestination,
+                                                    R.drawable.clapperboard,
+                                                    currentDestination?.hasRoute<Film>()
+                                                )
+                                            },
+                                            label = { Text(text = "Films") },
+                                            selected = currentDestination?.hasRoute<Film>() == true,
+                                            modifier = Modifier.weight(0.45f),
+                                            onClick = { navController.navigate(Film()) }
+                                        )
+
+                                        NavigationRailItem(
+                                            icon = {
+                                                NavigationImage(
+                                                    currentDestination,
+                                                    R.drawable.film,
+                                                    currentDestination?.hasRoute<Serie>()
+                                                )
+                                            }, label = { Text("Series") },
+                                            selected = currentDestination?.hasRoute<Serie>() == true,
+                                            modifier = Modifier.weight(0.1f),
+                                            onClick = { navController.navigate(Serie()) }
+                                        )
+
+
+                                        NavigationRailItem(
+                                            icon = { NavigationIconActor(currentDestination) },
+                                            label = { Text("Acteurs") },
+                                            selected = currentDestination?.hasRoute<Actor>() == true,
+                                            modifier = Modifier.weight(0.45f),
+                                            onClick = { navController.navigate(Actor()) }
+                                        )
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                Column {
                     NavHost(
                         navController = navController, startDestination = Home(),
                         modifier = Modifier.padding(innerPadding)
@@ -285,13 +341,14 @@ class MainActivity : ComponentActivity() {
                         }
 
                     }
-
                 }
             }
-
         }
+
     }
 }
+}
+
 
 
 fun findIfDetails(currentDestination: NavDestination?): Boolean {
