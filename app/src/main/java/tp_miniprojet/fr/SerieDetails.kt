@@ -29,8 +29,6 @@ import coil.compose.AsyncImage
 fun SerieDetailsScreen(serieId: Int, navController: NavHostController) {
     val viewModel: MainViewModel = viewModel()
     val serieDetails by viewModel.serieDetails.collectAsState()
-    val scrollState = rememberScrollState()
-    val posterUrl = "https://image.tmdb.org/t/p/w500"
 
     LaunchedEffect(serieId) {
         viewModel.getSerieDetails(serieId)

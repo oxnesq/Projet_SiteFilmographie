@@ -51,7 +51,7 @@ fun GridObjects(list: List<Card>, navController: NavHostController, name: String
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        TitleClass("Films")
+        CommonTitle("Films",fontSize = 40,fontWeight = FontWeight.Bold)
         CommonLazyVerticalGridPortrait {
             items(list) { l ->
                 CardItem(l, navController, name)
@@ -65,24 +65,13 @@ fun CardItem(card: Card, navController: NavHostController, name: String) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .height(340.dp)
-            //.padding(8.dp)
             .clickable { navController.navigate(name + "Details/${card.getIdCard()}") },
 
         ) {
         if (!card.getPosterPathCard().isNullOrEmpty()) {
-            AsyncImage(
-                model = posterUrl + card.getPosterPathCard(), // L'URL de l'image
-                contentDescription = "Poster du film",
-            )
+            PosterImage(card)
         } else {
-            Image(
-                painter = painterResource(R.drawable.galery),  // Image locale dans drawable
-                contentDescription = "Film logo",
-                modifier = Modifier
-                    .size(50.dp)
-            )
-
+            PosterImageEmpty()
         }
 
         Spacer(modifier = Modifier.height(4.dp))
@@ -93,19 +82,28 @@ fun CardItem(card: Card, navController: NavHostController, name: String) {
                 Alignment.Start
             )
         )
-
+        Spacer(modifier = Modifier.height(10.dp))
     }
 }
 
 
 @Composable
-fun TitleClass(title: String) {
-    Text(
-        text = title, // Le titre
-        style = MaterialTheme.typography.headlineLarge,
-        fontWeight = FontWeight.Bold,
+fun PosterImage(card : Card){
+    AsyncImage(
+        model = posterUrl + card.getPosterPathCard(), // L'URL de l'image
+        contentDescription = "Poster du film",
         modifier = Modifier
-            .padding(bottom = 16.dp)
+            .fillMaxWidth()
+    )
+}
+
+@Composable
+fun PosterImageEmpty(){
+    Image(
+        painter = painterResource(R.drawable.galery),  // Image locale dans drawable
+        contentDescription = "Film logo",
+        modifier = Modifier
+            .size(50.dp)
     )
 }
 

@@ -43,35 +43,34 @@ fun CardDetails(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .verticalScroll(scrollState)
+            .verticalScroll(scrollState),
     ) {
         if (card.isAnActor() == false) {
             BackdropImage(card)
-            Spacer(modifier = Modifier.height(5.dp))
-            TitleCard(card)
-            Spacer(modifier = Modifier.height(5.dp))
+            CommonTitle(card.getTitleCard(),fontSize = 40,fontWeight = FontWeight.Bold)
             PosterAndDetails(card)
+            OverviewCard(card,"Synopsis")
+            CommonTitle("Têtes d'affiche")
         } else {
-            ImageForActor(card)
-            TitleCard(card)
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                ImageForActor(card)
+                CommonTitle(card.getTitleCard(),fontSize = 40,fontWeight = FontWeight.Bold)
+            }
+            OverviewCard(card,"Biographie")
+            CommonTitle("Filmographie")
         }
-        Spacer(modifier = Modifier.height(10.dp))
-        OverviewCard(card)
         ShowCast(castMembers, navController, nameClass)
     }
 }
 
 @Composable
 fun ShowCast(castMembers: List<Card>, navController: NavHostController, nameClass: String) {
-    Text(
-        text = "Têtes d'affiche",
-        style = MaterialTheme.typography.headlineMedium,
-        fontWeight = FontWeight.SemiBold
-    )
-
     for (itemSeparate in castMembers.chunked(3)) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             for (i in itemSeparate)
@@ -82,16 +81,6 @@ fun ShowCast(castMembers: List<Card>, navController: NavHostController, nameClas
                 }
         }
     }
-}
-
-@Composable
-fun TitleCard(card: Card) {
-    Text(
-        text = card.getTitleCard(),
-        style = MaterialTheme.typography.headlineLarge,
-        modifier = Modifier.padding(7.dp),
-        fontWeight = FontWeight.Bold,
-    )
 }
 
 @Composable
@@ -109,18 +98,17 @@ fun BackdropImage(card: Card) {
 
 @Composable
 fun ImageForActor(card: Card) {
+
     if (card.getPosterPathCard() != null) {
         AsyncImage(
             model = posterUrl + card.getPosterPathCard(), // L'URL de l'image
-            contentDescription = "Poster de la Serie",
+            contentDescription = "Portrait de l'acteur",
             modifier = Modifier
                 .clip(CircleShape)
                 .size(200.dp)
                 .aspectRatio(1f),
-            //.align(Alignment.CenterHorizontally),
             contentScale = ContentScale.Crop
         )
-        Spacer(modifier = Modifier.height(4.dp))
     } else {
         Box(
             modifier = Modifier
@@ -148,13 +136,7 @@ fun PosterAndDetails(card: Card) {
                 .weight(0.4f) //La colone prendra 40% de la ligne
         ) {
             if (card.getPosterPathCard().isNotEmpty()) {
-                AsyncImage(
-                    model = posterUrl + card.getPosterPathCard(), // L'URL de l'image
-                    contentDescription = "Poster du film",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(0.66f) // La largeur 0.66 fois plus grande que la hauteur
-                )
+               PosterImage(card)
             }
         }
         Column(
@@ -180,15 +162,9 @@ fun PosterAndDetails(card: Card) {
 }
 
 @Composable
-fun OverviewCard(card: Card) {
+fun OverviewCard(card: Card, title: String) {
     if (card.getOverviewCard().isNotEmpty()) {
-        Text(
-            text = "Synopsis",
-            style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier.padding(7.dp),
-            fontWeight = FontWeight.SemiBold
-        )
-        Spacer(modifier = Modifier.height(5.dp))
+        CommonTitle(title)
         Text(
             text = card.getOverviewCard(),
             style = MaterialTheme.typography.bodyMedium,
@@ -197,4 +173,14 @@ fun OverviewCard(card: Card) {
         )
         Spacer(modifier = Modifier.height(10.dp))
     }
+}
+
+@Composable
+fun CommonTitle(text: String, modifier: Modifier = Modifier, fontSize: Int = 30, fontWeight: FontWeight = FontWeight.SemiBold) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.headlineLarge.copy(fontSize = fontSize.sp),
+        fontWeight = fontWeight,
+        modifier = modifier.padding(7.dp)
+    )
 }

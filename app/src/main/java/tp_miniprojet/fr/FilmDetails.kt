@@ -11,7 +11,6 @@ import androidx.navigation.NavHostController
 fun FilmDetailsScreen(movieId: Int, navController: NavHostController) {
     val viewModel: MainViewModel = viewModel()
     val movieDetails by viewModel.movieDetails.collectAsState()
-    val posterUrl = "https://image.tmdb.org/t/p/w500"
 
     LaunchedEffect(movieId) {
         viewModel.getMovieDetails(movieId)

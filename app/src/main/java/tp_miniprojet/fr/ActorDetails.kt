@@ -47,76 +47,8 @@ fun ActorDetailsScreen(actorId: Int, navController: NavHostController) {
 
     actorDetails?.let { actor ->
         val filmography = actor.credits.cast.take(9)
+        CardDetails(actorDetails, filmography, navController,"actor")
 
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(7.dp)
-                .verticalScroll(scrollState),
-        ) {
-            if (actor.profile_path != null) {
-                AsyncImage(
-                    model = posterUrl + actor.profile_path, // L'URL de l'image
-                    contentDescription = "Poster de la Serie",
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .size(200.dp)
-                        .aspectRatio(1f)
-                        .align(Alignment.CenterHorizontally),
-                    contentScale = ContentScale.Crop
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-            } else {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(100.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Person,
-                        contentDescription = "Personne sans photo",
-                        modifier = Modifier
-                            .size(50.dp),
-                        tint = Color.Gray
-                    )
-                }
-            }
-
-            Text(
-                text = actor.name,
-                style = MaterialTheme.typography.headlineLarge,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-            )
-            Spacer(modifier = Modifier.height(14.dp))
-            if (actor.biography.isNotEmpty()){
-                Text(text = "Biographie", style = MaterialTheme.typography.titleLarge,fontWeight = FontWeight.SemiBold)
-                Text(
-                    text = actor.biography,
-                    style = MaterialTheme.typography.bodyMedium,
-                    textAlign = TextAlign.Justify,
-                )
-            }
-
-            Spacer(modifier = Modifier.height(14.dp))
-            Text(text = "Filmographie", style = MaterialTheme.typography.titleLarge,fontWeight = FontWeight.SemiBold)
-
-            for(separate in filmography.chunked(3)){
-                Row (
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                ){
-                    for (s in separate)
-                        Column (
-                            modifier = Modifier.weight(0.33f),
-                        )  {
-                            CardItem( s, navController,"movie")
-                        }
-                }
-            }
-
-        }
     }
 }
 

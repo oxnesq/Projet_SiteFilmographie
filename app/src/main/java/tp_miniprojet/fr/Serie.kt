@@ -55,39 +55,5 @@ fun SerieScreen(searchQuery: TextFieldValue,navController: NavHostController) {
             viewModel.searchSeries(searchQuery.text)
         }
     }
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-        ) {
-            TitleClass("Series")
-            CommonLazyVerticalGridPortrait {
-                items(series) { serie ->
-                    SerieItem(serie, posterUrl, navController )
-                }
-            }
-        }
-    }
-
-
-
-@Composable
-fun SerieItem(serie: ModelSerie, posterUrl: String,navController:NavHostController) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(350.dp)
-            .padding(8.dp)
-            .clickable { navController.navigate("serieDetails/${serie.id}")}
-    ) {
-        if (serie.poster_path != null) {
-            AsyncImage(
-                model = posterUrl + serie.poster_path,
-                contentDescription = "Poster du film",
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-        }
-        Text(text = serie.name, style = MaterialTheme.typography.titleLarge)
-        //Text(text= serie.first_air_date, style=MaterialTheme.typography.bodySmall)
-    }
+    GridObjects(series, navController,"serie")
 }
