@@ -2,11 +2,15 @@ package tp_miniprojet.fr
 
 
 interface Card {
-    fun getTitleCard() : String;
-    fun getIdCard() : Int;
-    fun getPosterPathCard() : String;
-    fun getOverviewCard() : String;
-
+    fun isAnActor():Boolean;
+    fun getTitleCard(): String;
+    fun getIdCard(): Int;
+    fun getPosterPathCard(): String;
+    fun getBackdropPathCard(): String;
+    fun getOverviewCard(): String;
+    fun getReleaseDateCard(): String;
+    fun getGenresCard():List<Genre>;
+    //fun getCreditsCard():Credits;
 }
 
 
@@ -16,18 +20,23 @@ data class ModelListSerie(
 
 data class ModelSerie(
     val backdrop_path: String = "",
-    val credits: Credits = Credits() ,
+    val credits: Credits = Credits(),
     val genres: List<Genre> = listOf(),
     val id: Int = 0,
     val name: String = "",
     val overview: String = "",
     val popularity: Double = 0.0,
     val poster_path: String = "",
-) : Card{
+) : Card {
+    override fun isAnActor() = false
     override fun getTitleCard() = name
     override fun getIdCard() = id
     override fun getPosterPathCard() = poster_path
+    override fun getBackdropPathCard() = backdrop_path
     override fun getOverviewCard() = overview
+    override fun getReleaseDateCard() = ""
+    override fun getGenresCard() = genres
+   // override fun getCreditsCard() = credits
 }
 
 
@@ -42,12 +51,16 @@ data class ModelActor(
     val name: String = "",
     val popularity: Double = 0.0,
     val profile_path: String = "",
-    val character: String =""
-): Card{
+    val character: String = ""
+) : Card {
+    override fun isAnActor() = true
     override fun getTitleCard() = name
     override fun getIdCard() = id
     override fun getPosterPathCard() = profile_path
+    override fun getBackdropPathCard() = ""
     override fun getOverviewCard() = biography
+    override fun getReleaseDateCard() = ""
+    override fun getGenresCard(): List<Genre> = listOf()
 }
 
 
@@ -67,12 +80,17 @@ data class ModelMovie(
     val overview: String = "",
     val poster_path: String = "",
     val release_date: String = "",
-    val title: String="",
-) : Card{
+    val title: String = "",
+) : Card {
+    override fun isAnActor() = false
     override fun getTitleCard() = title
     override fun getIdCard() = id
     override fun getPosterPathCard() = poster_path
+    override fun getBackdropPathCard() = backdrop_path
     override fun getOverviewCard() = overview
+    override fun getReleaseDateCard() = release_date
+    override fun getGenresCard() = genres
+    //override fun getCreditsCard() = credits
 }
 
 data class Credits(

@@ -55,62 +55,6 @@ fun ActorScreen(searchQuery: TextFieldValue, navController: NavHostController) {
         }
     }
 
+    GridObjects(actors, navController,"actor")
 
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        TitleClass("Acteurs")
-        CommonLazyVerticalGridPortrait {
-            items(actors) { actor ->
-                ActorItem(actor, posterUrl,navController)
-
-            }
-        }
-    }
 }
-
-
-@Composable
-fun ActorItem(actor: ModelActor, posterUrl: String, navController: NavHostController) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-            .clickable { navController.navigate("actorDetails/${actor.id}") }
-    ) {
-        if (actor.profile_path != null) {
-            AsyncImage(
-                model = posterUrl + actor.profile_path,
-                contentDescription = "Poster du film",
-                modifier = Modifier.clip(CircleShape),
-                //contentScale = ContentScale.Crop
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-        } else {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(100.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Person,
-                    contentDescription = "Personne sans photo",
-                    modifier = Modifier
-                        .size(50.dp),
-                    tint = Color.Gray
-                )
-            }
-        }
-        Text(
-            text = actor.name,
-            style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        )
-    }
-}
-
-
