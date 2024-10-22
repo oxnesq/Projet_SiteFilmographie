@@ -6,9 +6,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.window.core.layout.WindowWidthSizeClass
 
 @Composable
-fun FilmDetailsScreen(movieId: Int, navController: NavHostController) {
+fun FilmDetailsScreen(movieId: Int, navController: NavHostController,classeLargeur: WindowWidthSizeClass) {
     val viewModel: MainViewModel = viewModel()
     val movieDetails by viewModel.movieDetails.collectAsState()
 
@@ -18,6 +19,6 @@ fun FilmDetailsScreen(movieId: Int, navController: NavHostController) {
 
     movieDetails?.let { movieDetails ->
         val castMembers = movieDetails.credits.cast.take(9)
-        CardDetails(movieDetails, castMembers, navController,"actor")
+        CardDetails(movieDetails, castMembers, navController,"actor",classeLargeur)
     }
 }

@@ -71,7 +71,8 @@ fun HomeScreen(classes: WindowSizeClass, navController: NavController) {
             ) {
                 Column(
                     modifier = Modifier
-                        .padding(16.dp),
+                        .padding(start = 16.dp)
+                        .weight(0.55f),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally  // Centre horizontalement les éléments
                 ) {
@@ -83,7 +84,8 @@ fun HomeScreen(classes: WindowSizeClass, navController: NavController) {
                 }
                 Column(
                     modifier = Modifier
-                        .padding(16.dp),
+                       .padding(end = 60.dp)
+                        .weight(0.45f),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally  // Centre horizontalement les éléments
                 ) {

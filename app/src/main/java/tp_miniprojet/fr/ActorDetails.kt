@@ -32,14 +32,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.window.core.layout.WindowWidthSizeClass
 import coil.compose.AsyncImage
 
 @Composable
-fun ActorDetailsScreen(actorId: Int, navController: NavHostController) {
+fun ActorDetailsScreen(actorId: Int, navController: NavHostController,classeLargeur: WindowWidthSizeClass) {
     val viewModel: MainViewModel = viewModel()
     val actorDetails by viewModel.actorDetails.collectAsState()
-    val scrollState = rememberScrollState()
-    val posterUrl = "https://image.tmdb.org/t/p/w500"
 
     LaunchedEffect(actorId) {
         viewModel.getActorDetails(actorId)
@@ -47,7 +46,7 @@ fun ActorDetailsScreen(actorId: Int, navController: NavHostController) {
 
     actorDetails?.let { actor ->
         val filmography = actor.credits.cast.take(9)
-        CardDetails(actorDetails, filmography, navController,"actor")
+        CardDetails(actorDetails, filmography, navController,"movie",classeLargeur)
 
     }
 }

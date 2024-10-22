@@ -29,6 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.window.core.layout.WindowWidthSizeClass
 import coil.compose.AsyncImage
 
 
@@ -37,7 +38,8 @@ fun CardDetails(
     card: Card,
     castMembers: List<Card>,
     navController: NavHostController,
-    nameClass: String
+    nameClass: String,
+    classeLargeur: WindowWidthSizeClass
 ) {
     val scrollState = rememberScrollState()
     Column(
@@ -62,13 +64,15 @@ fun CardDetails(
             OverviewCard(card,"Biographie")
             CommonTitle("Filmographie")
         }
-        ShowCast(castMembers, navController, nameClass)
+        ShowCast(castMembers, navController, nameClass,classeLargeur)
     }
 }
 
 @Composable
-fun ShowCast(castMembers: List<Card>, navController: NavHostController, nameClass: String) {
-    for (itemSeparate in castMembers.chunked(3)) {
+fun ShowCast(castMembers: List<Card>, navController: NavHostController, nameClass: String,classeLargeur: WindowWidthSizeClass) {
+    var num = 3
+    when (classeLargeur) {WindowWidthSizeClass.COMPACT -> {} else->{num=5}}
+    for (itemSeparate in castMembers.chunked(num)) {
         Row(
             modifier = Modifier.fillMaxWidth().padding(16.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),

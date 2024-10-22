@@ -38,6 +38,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.window.core.layout.WindowWidthSizeClass
 import coil.compose.AsyncImage
 import tp_premiereapplication.fr.R
 
@@ -45,17 +46,35 @@ val posterUrl = "https://image.tmdb.org/t/p/w500"
 
 
 @Composable
-fun GridObjects(list: List<Card>, navController: NavHostController, name: String) {
+fun GridObjects(
+    list: List<Card>,
+    navController: NavHostController,
+    name: String,
+    classeLargeur: WindowWidthSizeClass
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        CommonTitle("Films",fontSize = 40,fontWeight = FontWeight.Bold)
-        CommonLazyVerticalGridPortrait {
-            items(list) { l ->
-                CardItem(l, navController, name)
+        CommonTitle(TranslateName(name), fontSize = 30, fontWeight = FontWeight.Bold)
+        when (classeLargeur) {
+            WindowWidthSizeClass.COMPACT -> {
+                CommonLazyVerticalGridPortrait {
+                    items(list) { l ->
+                        CardItem(l, navController, name)
+                    }
+                }
             }
+
+            else -> {
+                CommonLazyVerticalGridLandscape {
+                    items(list) { l ->
+                        CardItem(l, navController, name)
+                    }
+                }
+            }
+
         }
     }
 }
@@ -88,7 +107,7 @@ fun CardItem(card: Card, navController: NavHostController, name: String) {
 
 
 @Composable
-fun PosterImage(card : Card){
+fun PosterImage(card: Card) {
     AsyncImage(
         model = posterUrl + card.getPosterPathCard(), // L'URL de l'image
         contentDescription = "Poster du film",
@@ -98,7 +117,7 @@ fun PosterImage(card : Card){
 }
 
 @Composable
-fun PosterImageEmpty(){
+fun PosterImageEmpty() {
     Image(
         painter = painterResource(R.drawable.galery),  // Image locale dans drawable
         contentDescription = "Film logo",
@@ -127,7 +146,7 @@ fun CommonLazyVerticalGridLandscape(
     content: LazyGridScope.() -> Unit
 ) {
     LazyVerticalGrid(
-        columns = GridCells.Fixed(3), // Définir 2 colonnes
+        columns = GridCells.Fixed(4), // Définir 2 colonnes
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -136,3 +155,15 @@ fun CommonLazyVerticalGridLandscape(
     )
 }
 
+@Composable
+fun TranslateName(text : String): String {
+    var translated : String = ""
+    if (text=="movie"){
+        translated="Films"
+    } else if(text=="tv"){
+        translated="Series"
+    } else if (text=="actor"){
+        translated="Acteurs"
+    }
+    return translated;
+}

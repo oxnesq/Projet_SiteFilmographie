@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
@@ -23,9 +24,9 @@ fun NavigationImage(
 ) {
     Image(
         painter = painterResource(logoName),  // Image locale dans drawable
-        contentDescription = "Film logo",
+        contentDescription = "Nav logo",
         modifier = Modifier
-            .size(20.dp),
+            .size(30.dp),
         colorFilter = if (currentClass == true) {
             ColorFilter.tint(Color.Black) // Couleur de l'icône quand sélectionné
         } else {
@@ -40,8 +41,17 @@ fun NavigationIconActor(currentDestination: NavDestination?) {
         imageVector = Icons.Filled.Person,  // Icône Material Design pour l'email
         contentDescription = "Actors",
         modifier = Modifier
-            .size(20.dp),
+            .size(30.dp),
         tint = if (currentDestination?.hasRoute<Actor>() == true) Color.Black else Color.DarkGray
+    )
+}
 
+@Composable
+fun CommonIcon(logoName: ImageVector) {
+    Icon(
+        imageVector = logoName,
+        contentDescription = "Icon",
+        modifier = Modifier
+            .size(30.dp)
     )
 }

@@ -23,10 +23,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.window.core.layout.WindowWidthSizeClass
 import coil.compose.AsyncImage
 
 @Composable
-fun SerieDetailsScreen(serieId: Int, navController: NavHostController) {
+fun SerieDetailsScreen(serieId: Int, navController: NavHostController,classeLargeur: WindowWidthSizeClass) {
     val viewModel: MainViewModel = viewModel()
     val serieDetails by viewModel.serieDetails.collectAsState()
 
@@ -36,7 +37,7 @@ fun SerieDetailsScreen(serieId: Int, navController: NavHostController) {
 
     serieDetails?.let { serie ->
         val castMembers = serie.credits.cast.take(9)
-        CardDetails(serieDetails, castMembers, navController,"actor")
+        CardDetails(serieDetails, castMembers, navController,"actor",classeLargeur)
 
     }
 }
