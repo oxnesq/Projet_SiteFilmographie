@@ -5,9 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -26,11 +24,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
 import androidx.navigation.compose.NavHost
@@ -80,81 +76,12 @@ class MainActivity : ComponentActivity() {
                         when (classeLargeur) {
                             WindowWidthSizeClass.COMPACT -> {
                                 if (currentDestination?.hasRoute<Home>() != true) {
-                                    TopAppBar(
-                                        colors = TopAppBarDefaults.smallTopAppBarColors(
-                                            containerColor = Color(0xFF2196F3)
-                                        ),
-                                        title = {
-                                            if (isSearching) {
-                                                TextField(
-                                                    value = searchQuery,
-                                                    onValueChange = { newValue ->
-                                                        searchQuery = newValue
-                                                    },
-                                                    modifier = Modifier
-                                                        .fillMaxWidth()
-                                                        .padding(horizontal = 8.dp),
-                                                    placeholder = { Text(text = "Rechercher...") },
-                                                    trailingIcon = {
-                                                        if (searchQuery.text.isNotEmpty()) {
-                                                            IconButton(onClick = {
-                                                                searchQuery = TextFieldValue("")
-                                                            }) {
-                                                                CommonIcon(Icons.Default.Close)
-                                                            }
-                                                        }
-                                                    },
-                                                    colors = TextFieldDefaults.textFieldColors(
-                                                        containerColor = Color.Transparent, // Fond transparent
-                                                    )
-                                                )
-                                            } else {
-                                                Text(
-                                                    "Cine'App",
-                                                    maxLines = 1,
-                                                    overflow = TextOverflow.Ellipsis,
-                                                    fontWeight = FontWeight.SemiBold,
-                                                )
-                                            }
-                                        },
-                                        navigationIcon = {
-                                            IconButton(onClick = {
-                                                if (findIfDetails(currentDestination)) {
-                                                    navController.popBackStack()
-                                                } else if (isSearching) {
-                                                    isSearching = false
-                                                    searchQuery =
-                                                        TextFieldValue("")
-                                                } else {
-                                                    isSearching = true
-                                                }
-
-                                            }) {
-                                                // Afficher la flèche retour si on est en mode recherche, sinon la loupe
-                                                if (isSearching || findIfDetails(currentDestination)) {
-                                                    CommonIcon(Icons.Filled.ArrowBack)
-                                                } else {
-                                                    CommonIcon(Icons.Filled.Search)
-                                                }
-                                            }
-                                        },
-                                        actions = {
-                                            IconButton(onClick = {
-                                                navController.navigate(Home())
-                                            }) {
-                                                Icon(
-                                                    imageVector = Icons.Outlined.Home,  // Icône Material Design pour l'email
-                                                    contentDescription = "Home page",
-                                                    modifier = Modifier
-                                                        .size(28.dp),
-                                                    tint = Color.Black
-                                                )
-                                            }
-
-                                        },
-
-
-                                        )
+                                    TopBar(isSearching = isSearching,
+                                        searchQuery = searchQuery,
+                                        currentDestination = currentDestination,
+                                        navController = navController,
+                                        onSearchQueryChange = { searchQuery = it },
+                                        onSearchStateChange = { isSearching = it })
                                 }
                             }
                         }
@@ -164,79 +91,30 @@ class MainActivity : ComponentActivity() {
                         when (classeLargeur) {
                             WindowWidthSizeClass.COMPACT -> {
                                 if (currentDestination?.hasRoute<Home>() != true) {
-                                    NavigationBar(
-                                        modifier = Modifier
-                                            .height(120.dp),
-                                        containerColor = Color(0xFF2196F3),
-                                        contentColor = Color.Black,
-
-                                        ) {
-                                        NavigationBarItem(
-                                            icon = {
-                                                NavigationImage(
-                                                    currentDestination,
-                                                    R.drawable.film,
-                                                    currentDestination?.hasRoute<Film>()
-                                                )
-                                            },
-                                            selected = currentDestination?.hasRoute<Film>() == true,
-                                            colors = NavigationBarItemDefaults.colors(
-                                                indicatorColor = Color(
-                                                    0xFF2264FF
-                                                )
-                                            ),
-                                            onClick = { navController.navigate(Film()) })
-                                        NavigationBarItem(
-                                            icon = {
-                                                NavigationImage(
-                                                    currentDestination,
-                                                    R.drawable.tv,
-                                                    currentDestination?.hasRoute<Serie>()
-                                                )
-                                            },
-                                            selected = currentDestination?.hasRoute<Serie>() == true,
-                                            colors = NavigationBarItemDefaults.colors(
-                                                indicatorColor = Color(
-                                                    0xFF2264FF
-                                                )
-                                            ),
-                                            onClick = { navController.navigate(Serie()) })
-                                        NavigationBarItem(
-                                            icon = {
-                                                NavigationIconActor(currentDestination)
-                                            },
-                                            selected = currentDestination?.hasRoute<Actor>() == true,
-                                            colors = NavigationBarItemDefaults.colors(
-                                                indicatorColor = Color(0xFF2264FF)
-                                            ),
-                                            onClick = { navController.navigate(Actor()) })
-                                    }
+                                    BottomBar(currentDestination,navController)
                                 }
                             }
                         }
                     },
-                    floatingActionButton = {
-                        when (classeLargeur) {
-                            WindowWidthSizeClass.COMPACT -> {}
-                            else -> {
-                                if (currentDestination?.hasRoute<Home>() != true)
-                                    FloatingActionButton(
-                                        onClick = { /* Action lorsque le bouton est cliqué */ },
-                                        containerColor = Color(0xFF2264FF),
-                                    ) {
-                                        CommonIcon(Icons.Filled.Search)
-                                    }
-                            }
-                        }
-                    },
-                    floatingActionButtonPosition = FabPosition.End
+                    /* floatingActionButton = {
+                         when (classeLargeur) {
+                             WindowWidthSizeClass.COMPACT -> {}
+                             else -> {
+                                 if (currentDestination?.hasRoute<Home>() != true)
+                                    //SearchBarLandscape()
+                             }
+                         }
+                     },
+                     floatingActionButtonPosition = FabPosition.End
+
+                     */
                 )
                 { innerPadding ->
                     Row {
                         when (classeLargeur) {
                             WindowWidthSizeClass.COMPACT -> {}
                             else -> {
-                                NavigationSideBar(currentDestination, innerPadding, navController)
+                                NavigationSideBar(currentDestination, navController)
                             }
                         }
                         Column() {
@@ -245,9 +123,27 @@ class MainActivity : ComponentActivity() {
                                 modifier = Modifier.padding(innerPadding),
                             ) {
                                 composable<Home> { HomeScreen(windowSizeClass, navController) }
-                                composable<Film> { FilmScreen(searchQuery, navController,classeLargeur) }
-                                composable<Serie> { SerieScreen(searchQuery, navController,classeLargeur) }
-                                composable<Actor> { ActorScreen(searchQuery, navController,classeLargeur) }
+                                composable<Film> {
+                                    FilmScreen(
+                                        searchQuery,
+                                        navController,
+                                        classeLargeur
+                                    )
+                                }
+                                composable<Serie> {
+                                    SerieScreen(
+                                        searchQuery,
+                                        navController,
+                                        classeLargeur
+                                    )
+                                }
+                                composable<Actor> {
+                                    ActorScreen(
+                                        searchQuery,
+                                        navController,
+                                        classeLargeur
+                                    )
+                                }
 
                                 composable(
                                     "movieDetails/{movieId}",
@@ -257,7 +153,11 @@ class MainActivity : ComponentActivity() {
                                 ) { backStackEntry ->
                                     val movieId = backStackEntry.arguments?.getInt("movieId")
                                     movieId?.let {
-                                        FilmDetailsScreen(movieId = it, navController,classeLargeur)
+                                        FilmDetailsScreen(
+                                            movieId = it,
+                                            navController,
+                                            classeLargeur
+                                        )
                                     }
                                 }
 
@@ -269,7 +169,11 @@ class MainActivity : ComponentActivity() {
                                 ) { backStackEntry ->
                                     val actorId = backStackEntry.arguments?.getInt("actorId")
                                     actorId?.let {
-                                        ActorDetailsScreen(actorId = it, navController,classeLargeur)
+                                        ActorDetailsScreen(
+                                            actorId = it,
+                                            navController,
+                                            classeLargeur
+                                        )
                                     }
                                 }
 
@@ -281,7 +185,11 @@ class MainActivity : ComponentActivity() {
                                 ) { backStackEntry ->
                                     val serieId = backStackEntry.arguments?.getInt("serieId")
                                     serieId?.let {
-                                        SerieDetailsScreen(serieId = it, navController,classeLargeur)
+                                        SerieDetailsScreen(
+                                            serieId = it,
+                                            navController,
+                                            classeLargeur
+                                        )
                                     }
                                 }
 
@@ -297,24 +205,117 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TopBar(
+    searchQuery: TextFieldValue,
+    isSearching: Boolean,
+    currentDestination: NavDestination?,
+    navController: NavHostController,
+    onSearchQueryChange: (TextFieldValue) -> Unit,
+    onSearchStateChange: (Boolean) -> Unit
+) {
+    TopAppBar(
+        colors = TopAppBarDefaults.smallTopAppBarColors(
+            containerColor = Color(0xFF2196F3)
+        ),
+        title = {
+            if (isSearching) {
+                TextForResearch(searchQuery, onSearchQueryChange)
+            } else {
+                Text(
+                    "Cine'App",
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    fontWeight = FontWeight.SemiBold,
+                )
+            }
+        },
+        navigationIcon = {
+            SearchButton(
+                isSearching,
+                onSearchQueryChange,
+                onSearchStateChange
+            )
+        },
+        actions = {
+            IconButton(onClick = {
+                navController.navigate(Home())
+            }) {
+                Icon(
+                    imageVector = Icons.Outlined.Home,
+                    contentDescription = "Home page",
+                    modifier = Modifier
+                        .size(28.dp),
+                    tint = Color.Black
+                )
+            }
+
+        },
+
+
+        )
+}
+
+@Composable
+fun BottomBar(currentDestination: NavDestination?,navController: NavHostController){
+    NavigationBar(
+        modifier = Modifier
+            .height(100.dp),
+        containerColor = Color(0xFF2196F3),
+        contentColor = Color.Black,
+
+        ) {
+        NavigationBarItem(
+            icon = {
+                NavigationImage(
+                    currentDestination,
+                    R.drawable.film,
+                    currentDestination?.hasRoute<Film>()
+                )
+            },
+            selected = currentDestination?.hasRoute<Film>() == true,
+            colors = NavigationBarItemDefaults.colors(
+                indicatorColor = Color(
+                    0xFF2264FF
+                ),
+            ),
+            onClick = { navController.navigate(Film()) })
+        NavigationBarItem(
+            icon = {
+                NavigationImage(
+                    currentDestination,
+                    R.drawable.tv,
+                    currentDestination?.hasRoute<Serie>()
+                )
+            },
+            selected = currentDestination?.hasRoute<Serie>() == true,
+            colors = NavigationBarItemDefaults.colors(
+                indicatorColor = Color(
+                    0xFF2264FF
+                )
+            ),
+            onClick = { navController.navigate(Serie()) })
+        NavigationBarItem(
+            icon = {
+                NavigationIconActor(currentDestination)
+            },
+            selected = currentDestination?.hasRoute<Actor>() == true,
+            colors = NavigationBarItemDefaults.colors(
+                indicatorColor = Color(0xFF2264FF)
+            ),
+            onClick = { navController.navigate(Actor()) })
+    }
+}
+
 @Composable
 fun NavigationSideBar(
     currentDestination: NavDestination?,
-    innerPadding: PaddingValues,
     navController: NavHostController
 ) {
-    /*val layoutDirection = LocalLayoutDirection.current
-    var leftPadding : Dp = innerPadding.calculateStartPadding(layoutDirection);
 
-     */
     if (currentDestination?.hasRoute<Home>() != true) {
         NavigationRail(
-           /* modifier = Modifier
-                //.height(50.dp)
-                //.width(100.dp)
-                .padding(horizontal = leftPadding ),
-                
-            */
             containerColor = Color(0xFF2196F3),
             contentColor = Color.Black
         ) {
@@ -328,6 +329,7 @@ fun NavigationSideBar(
                 },
                 selected = currentDestination?.hasRoute<Film>() == true,
                 modifier = Modifier.weight(0.45f),
+                colors = NavigationRailItemDefaults.colors(indicatorColor = Color(0xFF2264FF)),
                 onClick = { navController.navigate(Film()) }
             )
 
@@ -341,6 +343,7 @@ fun NavigationSideBar(
                 },
                 selected = currentDestination?.hasRoute<Serie>() == true,
                 modifier = Modifier.weight(0.1f),
+                colors = NavigationRailItemDefaults.colors(indicatorColor = Color(0xFF2264FF)),
                 onClick = { navController.navigate(Serie()) }
             )
 
@@ -349,6 +352,7 @@ fun NavigationSideBar(
                 icon = { NavigationIconActor(currentDestination) },
                 selected = currentDestination?.hasRoute<Actor>() == true,
                 modifier = Modifier.weight(0.45f),
+                colors = NavigationRailItemDefaults.colors(indicatorColor = Color(0xFF2264FF)),
                 onClick = { navController.navigate(Actor()) }
             )
         }
@@ -357,6 +361,65 @@ fun NavigationSideBar(
     }
 }
 
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TextForResearch(
+    searchQuery: TextFieldValue,
+    onSearchQueryChange: (TextFieldValue) -> Unit
+) {
+    TextField(
+        value = searchQuery,
+        onValueChange = onSearchQueryChange,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp),
+        placeholder = { Text(text = "Rechercher...") },
+        trailingIcon = {
+            if (searchQuery.text.isNotEmpty()) {
+                IconButton(onClick = {
+                    onSearchQueryChange(TextFieldValue(""))
+                }) {
+                    CommonIcon(Icons.Default.Close)
+                }
+            }
+        },
+        colors = TextFieldDefaults.textFieldColors(
+            containerColor = Color.Transparent, // Fond transparent
+        )
+    )
+}
+
+@Composable
+fun SearchButton(
+    isSearching: Boolean,
+    onSearchQueryChange: (TextFieldValue) -> Unit,
+    onSearchStateChange: (Boolean) -> Unit
+) {
+    IconButton(onClick = {
+        if (isSearching) {
+            onSearchStateChange(false)
+            onSearchQueryChange(TextFieldValue(""))
+        } else {
+            onSearchStateChange(true)
+        }
+    }) {
+        if (isSearching) {
+            CommonIcon(Icons.Filled.ArrowBack)
+        } else {
+            CommonIcon(Icons.Filled.Search)
+        }
+    }
+}
+
+/*@Composable
+fun ChangeIsSearching(bo : Boolean): Boolean {
+    var isSearching by remember { mutableStateOf(false) }
+    isSearching=bo;
+    return isSearching
+}
+
+ */
 
 fun findIfDetails(currentDestination: NavDestination?): Boolean {
     var bo: Boolean

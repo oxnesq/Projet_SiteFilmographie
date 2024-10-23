@@ -57,7 +57,10 @@ fun GridObjects(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        CommonTitle(TranslateName(name), fontSize = 30, fontWeight = FontWeight.Bold)
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween){
+            CommonTitle(TranslateName(name), fontSize = 30, fontWeight = FontWeight.Bold)
+            //SearchBarLandscape()
+        }
         when (classeLargeur) {
             WindowWidthSizeClass.COMPACT -> {
                 CommonLazyVerticalGridPortrait {
