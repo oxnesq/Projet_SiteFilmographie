@@ -1,6 +1,7 @@
 package tp_miniprojet.fr
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,6 +21,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
@@ -37,6 +39,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.window.core.layout.WindowWidthSizeClass
 import coil.compose.AsyncImage
@@ -50,17 +53,14 @@ fun GridObjects(
     list: List<Card>,
     navController: NavHostController,
     name: String,
-    classeLargeur: WindowWidthSizeClass
+    classeLargeur: WindowWidthSizeClass,
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween){
-            CommonTitle(TranslateName(name), fontSize = 30, fontWeight = FontWeight.Bold)
-            //SearchBarLandscape()
-        }
+
         when (classeLargeur) {
             WindowWidthSizeClass.COMPACT -> {
                 CommonLazyVerticalGridPortrait {
@@ -158,15 +158,3 @@ fun CommonLazyVerticalGridLandscape(
     )
 }
 
-@Composable
-fun TranslateName(text : String): String {
-    var translated : String = ""
-    if (text=="movie"){
-        translated="Films"
-    } else if(text=="tv"){
-        translated="Series"
-    } else if (text=="actor"){
-        translated="Acteurs"
-    }
-    return translated;
-}
