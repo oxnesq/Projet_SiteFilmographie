@@ -1,5 +1,6 @@
 package tp_miniprojet.fr
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -25,6 +27,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -33,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -43,6 +48,7 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.window.core.layout.WindowWidthSizeClass
 import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import tp_premiereapplication.fr.R
 
 val posterUrl = "https://image.tmdb.org/t/p/w500"
@@ -50,7 +56,7 @@ val posterUrl = "https://image.tmdb.org/t/p/w500"
 
 @Composable
 fun GridObjects(
-    list: List<Card>,
+    list: List<CardType>,
     navController: NavHostController,
     name: String,
     classeLargeur: WindowWidthSizeClass,
@@ -61,61 +67,61 @@ fun GridObjects(
             .padding(16.dp)
     ) {
 
+        var numberOfMovie = 0
         when (classeLargeur) {
             WindowWidthSizeClass.COMPACT -> {
-                CommonLazyVerticalGridPortrait {
-                    items(list) { l ->
-                        CardItem(l, navController, name)
-                    }
-                }
+                numberOfMovie = 2
             }
 
             else -> {
-                CommonLazyVerticalGridLandscape {
-                    items(list) { l ->
-                        CardItem(l, navController, name)
-                    }
-                }
+                numberOfMovie = 5
             }
-
         }
+        CommonLazyVerticalGrid(content = {
+            items(list) { l ->
+                CardItem(l, navController, name)
+            }
+        }, numberOfMovie)
     }
 }
 
 @Composable
-fun CardItem(card: Card, navController: NavHostController, name: String) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { navController.navigate(name + "Details/${card.getIdCard()}") },
-
+fun CardItem(card: CardType, navController: NavHostController, name: String) {
+    Card(elevation = CardDefaults.cardElevation(4.dp),
+        modifier = Modifier.height(300.dp)) {
+        Column(
+            modifier = Modifier
+                .padding(5.dp)
+                .clickable { navController.navigate(name + "Details/${card.getIdCard()}") },
         ) {
-        if (!card.getPosterPathCard().isNullOrEmpty()) {
-            PosterImage(card)
-        } else {
-            PosterImageEmpty()
-        }
-
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            text = card.getTitleCard(),
-            style = MaterialTheme.typography.titleMedium.copy(fontSize = 22.sp),
-            modifier = Modifier.align(
-                Alignment.Start
+            if (!card.getPosterPathCard().isNullOrEmpty()) {
+                PosterImage(card)
+            } else {
+                PosterImageEmpty()
+            }
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = card.getTitleCard(),
+                style = MaterialTheme.typography.titleMedium.copy(fontSize = 22.sp),
+                modifier = Modifier.align(
+                    Alignment.Start
+                )
             )
-        )
-        Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(10.dp))
+        }
     }
+
 }
 
 
 @Composable
-fun PosterImage(card: Card) {
+fun PosterImage(card: CardType) {
     AsyncImage(
         model = posterUrl + card.getPosterPathCard(), // L'URL de l'image
         contentDescription = "Poster du film",
         modifier = Modifier
             .fillMaxWidth()
+            .clip(RoundedCornerShape(16.dp))
     )
 }
 
@@ -131,30 +137,33 @@ fun PosterImageEmpty() {
 
 
 @Composable
-fun CommonLazyVerticalGridPortrait(
-    content: LazyGridScope.() -> Unit
+fun CommonLazyVerticalGrid(
+    content: LazyGridScope.() -> Unit,
+    numberOfMovie: Int
 ) {
     LazyVerticalGrid(
-        columns = GridCells.Fixed(2), // Définir 2 colonnes
+        columns = GridCells.Fixed(numberOfMovie), // Définir 2 colonnes
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp), // Espace entre les colonnes
-        content = content
-    )
+        content = content,
+
+        )
 }
 
+/*
 @Composable
-fun CommonLazyVerticalGridLandscape(
-    content: LazyGridScope.() -> Unit
-) {
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(4), // Définir 2 colonnes
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp), // Espace entre les colonnes
-        content = content
-    )
+fun painterCard(card: Card): Painter {
+    Log.i("TESTPainter", "posterPath: ${card.getPosterPathCard()}")
+    val painter: Painter
+    if (card.getPosterPathCard().isEmpty()) {
+        painter=painterResource(id = R.drawable.galery)
+    } else {
+        painter=rememberAsyncImagePainter(model = "https://image.tmdb.org/t/p/w500${card.getPosterPathCard()}")
+    }
+    Log.i("TESTPainter", "painter : $painter")
+    return painter
 }
 
+ */

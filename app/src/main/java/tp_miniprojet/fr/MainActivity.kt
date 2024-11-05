@@ -1,5 +1,8 @@
 package tp_miniprojet.fr
 
+import android.content.Context
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -7,7 +10,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,13 +34,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.motionEventSpy
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
 import androidx.navigation.compose.NavHost
@@ -50,6 +62,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import androidx.window.core.layout.WindowWidthSizeClass
+import kotlinx.serialization.json.Json.Default.configuration
 
 @Serializable
 class Home
@@ -79,18 +92,39 @@ class MainActivity : ComponentActivity() {
                 var isSearching by remember { mutableStateOf(false) }
                 val classeLargeur = windowSizeClass.windowWidthSizeClass
 
+                //Taille de l'ecran
+                val configurationScreen = LocalConfiguration.current
+                val screenWidth = configurationScreen.screenWidthDp.dp
+                val screenHeight = configurationScreen.screenHeightDp.dp
+
+                //Color by modes
+                val currentNightMode =
+                    resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+                var backgroundColor = Color(0xFFF5F5F5)
+                var iconsColor = Color.Black
+                when (currentNightMode) {
+                    //Configuration.UI_MODE_NIGHT_NO -> {}
+                    Configuration.UI_MODE_NIGHT_YES -> {
+                        backgroundColor = Color.DarkGray
+                        iconsColor = Color.White
+                    }
+                }
+
 
                 Scaffold(
                     topBar = {
                         if (currentDestination?.hasRoute<Home>() != true) {
                             when (classeLargeur) {
                                 WindowWidthSizeClass.COMPACT -> {
-                                    TopBar(isSearching = isSearching,
+                                    TopBar(
+                                        isSearching = isSearching,
                                         searchQuery = searchQuery,
                                         currentDestination = currentDestination,
                                         navController = navController,
                                         onSearchQueryChange = { searchQuery = it },
-                                        onSearchStateChange = { isSearching = it })
+                                        onSearchStateChange = { isSearching = it },
+                                        iconsColor = iconsColor
+                                    )
                                 }
                             }
                         }
@@ -100,111 +134,162 @@ class MainActivity : ComponentActivity() {
                         when (classeLargeur) {
                             WindowWidthSizeClass.COMPACT -> {
                                 if (currentDestination?.hasRoute<Home>() != true) {
-                                    BottomBar(currentDestination, navController)
+                                    BottomBar(currentDestination, navController, iconsColor)
                                 }
                             }
                         }
                     },
                     floatingActionButton = {
-                        SearchButtonLandscape(classeLargeur,currentDestination,searchQuery,isSearching,onSearchQueryChange = { searchQuery = it },
-                            onSearchStateChange = { isSearching = it })
+                         SearchButtonLandscape(classeLargeur,
+                             currentDestination,
+                             searchQuery,
+                             isSearching,
+                             onSearchQueryChange = { searchQuery = it },
+                             onSearchStateChange = { isSearching = it },navController)
+
+
                     },
                     floatingActionButtonPosition = FabPosition.End,
 
-                )
+                    )
                 { innerPadding ->
-                    Row(modifier = Modifier.background(Color(0xFFECEFF1))) {
+                    Row(modifier = Modifier.background(backgroundColor)) {
                         when (classeLargeur) {
                             WindowWidthSizeClass.COMPACT -> {}
                             else -> {
                                 Column() {
-                                    NavigationSideBar(currentDestination, navController)
+                                    NavigationSideBar(currentDestination, navController, iconsColor)
                                 }
                             }
                         }
-                        NavHost(
-                            navController = navController, startDestination = Home(),
-                            modifier = Modifier.padding(innerPadding),
-                        ) {
-                            composable<Home> { HomeScreen(windowSizeClass, navController) }
-                            composable<Film> {
-                                FilmScreen(
-                                    searchQuery,
-                                    navController,
-                                    classeLargeur
-                                )
-                            }
-                            composable<Serie> {
-                                SerieScreen(
-                                    searchQuery,
-                                    navController,
-                                    classeLargeur
-                                )
-                            }
-                            composable<Actor> {
-                                ActorScreen(
-                                    searchQuery,
-                                    navController,
-                                    classeLargeur
-                                )
+                        Column {
+                           /* if (currentDestination?.hasRoute<Home>() != true) {
+                                when (classeLargeur) {
+                                    WindowWidthSizeClass.COMPACT -> {}
+                                    else -> {
+                                        Row(
+                                            Modifier
+                                                .height(85.dp)
+                                                .padding(top = innerPadding.calculateTopPadding())
+                                                .background(Color(0xFF2196F3))
+                                                .clip(RoundedCornerShape(30.dp))
+                                        ) {
+                                            SearchButtonLandscape(
+                                                classeLargeur,
+                                                currentDestination,
+                                                searchQuery,
+                                                isSearching,
+                                                onSearchQueryChange = { searchQuery = it },
+                                                onSearchStateChange = { isSearching = it },
+                                                navController
+                                            )
+                                        }
+                                    }
+                                }
                             }
 
-                            composable(
-                                "movieDetails/{movieId}",
-                                arguments = listOf(navArgument("movieId") {
-                                    type = NavType.IntType
-                                })
-                            ) { backStackEntry ->
-                                val movieId = backStackEntry.arguments?.getInt("movieId")
-                                movieId?.let {
-                                    FilmDetailsScreen(
-                                        movieId = it,
+                              var topPadding : Dp
+                            topPadding =
+                                when (classeLargeur) {
+                                WindowWidthSizeClass.COMPACT -> {
+                                    innerPadding.calculateTopPadding()
+                                }
+                                else -> {
+                                    0.dp
+                                }}
+
+                           */
+                            NavHost(
+                                navController = navController, startDestination = Home(),
+                                modifier = Modifier.padding(innerPadding),
+                            ) {
+                                composable<Home> {
+                                    HomeScreen(
+                                        windowSizeClass,
+                                        navController,
+                                        iconsColor
+                                    )
+                                }
+                                composable<Film> {
+                                    FilmScreen(
+                                        searchQuery,
                                         navController,
                                         classeLargeur
                                     )
                                 }
-                            }
-
-                            composable(
-                                "actorDetails/{actorId}",
-                                arguments = listOf(navArgument("actorId") {
-                                    type = NavType.IntType
-                                })
-                            ) { backStackEntry ->
-                                val actorId = backStackEntry.arguments?.getInt("actorId")
-                                actorId?.let {
-                                    ActorDetailsScreen(
-                                        actorId = it,
+                                composable<Serie> {
+                                    SerieScreen(
+                                        searchQuery,
                                         navController,
                                         classeLargeur
                                     )
                                 }
-                            }
-
-                            composable(
-                                "serieDetails/{serieId}",
-                                arguments = listOf(navArgument("serieId") {
-                                    type = NavType.IntType
-                                })
-                            ) { backStackEntry ->
-                                val serieId = backStackEntry.arguments?.getInt("serieId")
-                                serieId?.let {
-                                    SerieDetailsScreen(
-                                        serieId = it,
+                                composable<Actor> {
+                                    ActorScreen(
+                                        searchQuery,
                                         navController,
                                         classeLargeur
                                     )
                                 }
-                            }
 
+                                composable(
+                                    "movieDetails/{movieId}",
+                                    arguments = listOf(navArgument("movieId") {
+                                        type = NavType.IntType
+                                    })
+                                ) { backStackEntry ->
+                                    val movieId = backStackEntry.arguments?.getInt("movieId")
+                                    movieId?.let {
+                                        FilmDetailsScreen(
+                                            movieId = it,
+                                            navController,
+                                            classeLargeur
+                                        )
+                                    }
+                                }
+
+                                composable(
+                                    "actorDetails/{actorId}",
+                                    arguments = listOf(navArgument("actorId") {
+                                        type = NavType.IntType
+                                    })
+                                ) { backStackEntry ->
+                                    val actorId = backStackEntry.arguments?.getInt("actorId")
+                                    actorId?.let {
+                                        ActorDetailsScreen(
+                                            actorId = it,
+                                            navController,
+                                            classeLargeur
+                                        )
+                                    }
+                                }
+
+                                composable(
+                                    "serieDetails/{serieId}",
+                                    arguments = listOf(navArgument("serieId") {
+                                        type = NavType.IntType
+                                    })
+                                ) { backStackEntry ->
+                                    val serieId = backStackEntry.arguments?.getInt("serieId")
+                                    serieId?.let {
+                                        SerieDetailsScreen(
+                                            serieId = it,
+                                            navController,
+                                            classeLargeur
+                                        )
+                                    }
+                                }
+
+
+                            }
 
                         }
+
+
                     }
-
-
                 }
-            }
 
+            }
         }
     }
 }
@@ -217,7 +302,8 @@ fun TopBar(
     currentDestination: NavDestination?,
     navController: NavHostController,
     onSearchQueryChange: (TextFieldValue) -> Unit,
-    onSearchStateChange: (Boolean) -> Unit
+    onSearchStateChange: (Boolean) -> Unit,
+    iconsColor: Color
 ) {
     TopAppBar(
         colors = TopAppBarDefaults.smallTopAppBarColors(
@@ -232,7 +318,8 @@ fun TopBar(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     fontWeight = FontWeight.Bold,
-                    fontFamily = FontFamily.Serif
+                    fontFamily = FontFamily.Serif,
+                    color = iconsColor
                 )
             }
         },
@@ -240,7 +327,7 @@ fun TopBar(
             SearchButton(
                 isSearching,
                 onSearchQueryChange,
-                onSearchStateChange
+                onSearchStateChange, currentDestination, navController
             )
         },
         actions = {
@@ -252,7 +339,7 @@ fun TopBar(
                     contentDescription = "Home page",
                     modifier = Modifier
                         .size(28.dp),
-                    tint = Color.Black
+                    tint = iconsColor
                 )
             }
 
@@ -263,10 +350,14 @@ fun TopBar(
 }
 
 @Composable
-fun BottomBar(currentDestination: NavDestination?, navController: NavHostController) {
+fun BottomBar(
+    currentDestination: NavDestination?,
+    navController: NavHostController,
+    iconsColor: Color
+) {
     NavigationBar(
         modifier = Modifier
-            .height(100.dp),
+            .height(120.dp),
         containerColor = Color(0xFF2196F3),
         contentColor = Color.Black,
 
@@ -276,7 +367,7 @@ fun BottomBar(currentDestination: NavDestination?, navController: NavHostControl
                 NavigationImage(
                     currentDestination,
                     R.drawable.film,
-                    currentDestination?.hasRoute<Film>()
+                    currentDestination?.hasRoute<Film>(), iconsColor
                 )
             },
             selected = currentDestination?.hasRoute<Film>() == true,
@@ -292,7 +383,7 @@ fun BottomBar(currentDestination: NavDestination?, navController: NavHostControl
                 NavigationImage(
                     currentDestination,
                     R.drawable.tv,
-                    currentDestination?.hasRoute<Serie>()
+                    currentDestination?.hasRoute<Serie>(), iconsColor
                 )
             },
             selected = currentDestination?.hasRoute<Serie>() == true,
@@ -305,7 +396,7 @@ fun BottomBar(currentDestination: NavDestination?, navController: NavHostControl
             onClick = { navController.navigate(Serie()) })
         NavigationBarItem(
             icon = {
-                NavigationIconActor(currentDestination)
+                NavigationIconActor(currentDestination, iconsColor)
             },
             selected = currentDestination?.hasRoute<Actor>() == true,
             label = { Text("Acteurs") },
@@ -319,7 +410,7 @@ fun BottomBar(currentDestination: NavDestination?, navController: NavHostControl
 @Composable
 fun NavigationSideBar(
     currentDestination: NavDestination?,
-    navController: NavHostController
+    navController: NavHostController, iconsColor: Color
 ) {
 
     if (currentDestination?.hasRoute<Home>() != true) {
@@ -332,7 +423,7 @@ fun NavigationSideBar(
                     NavigationImage(
                         currentDestination,
                         R.drawable.film,
-                        currentDestination?.hasRoute<Film>()
+                        currentDestination?.hasRoute<Film>(), iconsColor
                     )
                 },
                 selected = currentDestination?.hasRoute<Film>() == true,
@@ -347,7 +438,7 @@ fun NavigationSideBar(
                     NavigationImage(
                         currentDestination,
                         R.drawable.tv,
-                        currentDestination?.hasRoute<Serie>()
+                        currentDestination?.hasRoute<Serie>(), iconsColor
                     )
                 },
                 selected = currentDestination?.hasRoute<Serie>() == true,
@@ -359,7 +450,7 @@ fun NavigationSideBar(
 
 
             NavigationRailItem(
-                icon = { NavigationIconActor(currentDestination) },
+                icon = { NavigationIconActor(currentDestination, iconsColor) },
                 selected = currentDestination?.hasRoute<Actor>() == true,
                 label = { Text("Acteurs") },
                 modifier = Modifier.weight(0.45f),
@@ -394,7 +485,7 @@ fun TextForResearch(
                 }
             }
         },
-       colors = TextFieldDefaults.textFieldColors(
+        colors = TextFieldDefaults.textFieldColors(
             containerColor = Color.Transparent, // Fond transparent
         ),
 
@@ -407,19 +498,26 @@ fun SearchButton(
     isSearching: Boolean,
     onSearchQueryChange: (TextFieldValue) -> Unit,
     onSearchStateChange: (Boolean) -> Unit,
+    currentDestination: NavDestination?, navController: NavHostController
 ) {
-    IconButton(onClick = {
-        if (isSearching) {
-            onSearchStateChange(false)
-            onSearchQueryChange(TextFieldValue(""))
-        } else {
-            onSearchStateChange(true)
-        }
-    },
+    IconButton(
+        onClick = {
+            if (findIfDetails(currentDestination)) {
+                // Si on est sur une page de détails, naviguer vers la page précédente
+                navController.popBackStack()
+            } else
+                if (isSearching) {
+                    onSearchStateChange(false)
+                    onSearchQueryChange(TextFieldValue(""))
+                } else {
+                    onSearchStateChange(true)
+                }
+        },
         Modifier
             .background(Color(0xFF2196F3))
-            .clip(RoundedCornerShape(16.dp))) {
-        if (isSearching) {
+           // .clip(RoundedCornerShape(16.dp)),
+    ) {
+        if (isSearching || findIfDetails(currentDestination)) {
             CommonIcon(Icons.Filled.ArrowBack)
         } else {
             CommonIcon(Icons.Filled.Search)
@@ -435,31 +533,30 @@ fun SearchButtonLandscape(
     searchQuery: TextFieldValue,
     isSearching: Boolean,
     onSearchQueryChange: (TextFieldValue) -> Unit,
-    onSearchStateChange: (Boolean) -> Unit
+    onSearchStateChange: (Boolean) -> Unit, navController: NavHostController
 ) {
     when (classeLargeur) {
         WindowWidthSizeClass.COMPACT -> {}
         else -> {
             if (currentDestination?.hasRoute<Film>() == true || currentDestination?.hasRoute<Serie>() == true || currentDestination?.hasRoute<Actor>() == true) {
                 if (isSearching) {
-                    Row(
-                        Modifier
-                            .height(50.dp)
-                            .background(Color(0xFF2196F3))
-                            .clip(RoundedCornerShape(30.dp))
-                    ) {
-                        TextForResearch(searchQuery, onSearchQueryChange = onSearchQueryChange)
+                    Row( Modifier
+                        .height(85.dp)
+                        .background(Color(0xFF2196F3))
+                        .clip(RoundedCornerShape(80.dp))){
                         SearchButton(
                             isSearching = isSearching,
                             onSearchQueryChange = onSearchQueryChange,
-                            onSearchStateChange = onSearchStateChange
+                            onSearchStateChange = onSearchStateChange, currentDestination, navController
                         )
+                        TextForResearch(searchQuery, onSearchQueryChange = onSearchQueryChange)
                     }
+
                 } else {
                     SearchButton(
                         isSearching = isSearching,
                         onSearchQueryChange = onSearchQueryChange,
-                        onSearchStateChange = onSearchStateChange
+                        onSearchStateChange = onSearchStateChange, currentDestination, navController
                     )
                 }
 
@@ -467,6 +564,16 @@ fun SearchButtonLandscape(
 
         }
     }
+}
+
+fun findIfDetails(currentDestination: NavDestination?): Boolean {
+    var bo: Boolean
+    bo = false
+    if (currentDestination?.route?.startsWith("movieDetails") == true ||
+        currentDestination?.route?.startsWith("actorDetails") == true ||
+        currentDestination?.route?.startsWith("serieDetails") == true
+    ) bo = true
+    return bo
 }
 
 /*

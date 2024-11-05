@@ -1,7 +1,7 @@
 package tp_miniprojet.fr
 
 
-interface Card {
+interface CardType {
     fun isAnActor():Boolean;
     fun getTitleCard(): String;
     fun getIdCard(): Int;
@@ -27,7 +27,7 @@ data class ModelSerie(
     val overview: String = "",
     val popularity: Double = 0.0,
     val poster_path: String = "",
-) : Card {
+) : CardType {
     override fun isAnActor() = false
     override fun getTitleCard() = name
     override fun getIdCard() = id
@@ -52,7 +52,7 @@ data class ModelActor(
     val popularity: Double = 0.0,
     val profile_path: String = "",
     val character: String = ""
-) : Card {
+) : CardType {
     override fun isAnActor() = true
     override fun getTitleCard() = name
     override fun getIdCard() = id
@@ -81,7 +81,7 @@ data class ModelMovie(
     val poster_path: String = "",
     val release_date: String = "",
     val title: String = "",
-) : Card {
+) : CardType {
     override fun isAnActor() = false
     override fun getTitleCard() = title
     override fun getIdCard() = id

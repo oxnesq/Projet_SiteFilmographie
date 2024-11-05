@@ -17,7 +17,8 @@
             android:name="tp_miniprojet.fr.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.TP_PremiereApplication">
+            android:theme="@style/Theme.TP_PremiereApplication"
+            android:configChanges="uiMode">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

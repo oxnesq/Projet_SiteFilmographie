@@ -24,7 +24,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -32,12 +34,14 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.window.core.layout.WindowWidthSizeClass
 import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
+import tp_premiereapplication.fr.R
 
 
 @Composable
 fun CardDetails(
-    card: Card,
-    castMembers: List<Card>,
+    card: CardType,
+    castMembers: List<CardType>,
     navController: NavHostController,
     nameClass: String,
     classeLargeur: WindowWidthSizeClass
@@ -70,7 +74,7 @@ fun CardDetails(
 }
 
 @Composable
-fun ShowCast(castMembers: List<Card>, navController: NavHostController, nameClass: String,classeLargeur: WindowWidthSizeClass) {
+fun ShowCast(castMembers: List<CardType>, navController: NavHostController, nameClass: String,classeLargeur: WindowWidthSizeClass) {
     var num = 3
     when (classeLargeur) {WindowWidthSizeClass.COMPACT -> {} else->{num=5}}
     for (itemSeparate in castMembers.chunked(num)) {
@@ -89,7 +93,7 @@ fun ShowCast(castMembers: List<Card>, navController: NavHostController, nameClas
 }
 
 @Composable
-fun BackdropImage(card: Card) {
+fun BackdropImage(card: CardType) {
     if (card.getBackdropPathCard() != null) {
         AsyncImage(
             model = posterUrl + card.getBackdropPathCard(), // L'URL de l'image
@@ -102,7 +106,7 @@ fun BackdropImage(card: Card) {
 }
 
 @Composable
-fun ImageForActor(card: Card) {
+fun ImageForActor(card: CardType) {
 
     if (card.getPosterPathCard() != null) {
         AsyncImage(
@@ -133,16 +137,14 @@ fun ImageForActor(card: Card) {
 }
 
 @Composable
-fun PosterAndDetails(card: Card) {
+fun PosterAndDetails(card: CardType) {
     Row(modifier = Modifier.padding(7.dp)) {
         Column(
             modifier = Modifier
                 //.padding(5.dp)
                 .weight(0.4f) //La colone prendra 40% de la ligne
         ) {
-            if (card.getPosterPathCard().isNotEmpty()) {
-               PosterImage(card)
-            }
+           PosterImage(card)
         }
         Column(
             modifier = Modifier
@@ -167,7 +169,7 @@ fun PosterAndDetails(card: Card) {
 }
 
 @Composable
-fun OverviewCard(card: Card, title: String) {
+fun OverviewCard(card: CardType, title: String) {
     if (card.getOverviewCard().isNotEmpty()) {
         CommonTitle(title)
         Text(

@@ -40,7 +40,7 @@ import androidx.window.core.layout.WindowWidthSizeClass
 import tp_premiereapplication.fr.R
 
 @Composable
-fun HomeScreen(classes: WindowSizeClass, navController: NavController) {
+fun HomeScreen(classes: WindowSizeClass, navController: NavController,iconsColor: Color) {
     //val classeHauteur = classes.windowHeightSizeClass
     val classeLargeur = classes.windowWidthSizeClass
     when (classeLargeur) {
@@ -60,7 +60,7 @@ fun HomeScreen(classes: WindowSizeClass, navController: NavController) {
                 Spacer(modifier = Modifier.height(40.dp))
                 LogosText()
                 Spacer(modifier = Modifier.height(40.dp))
-                ButtonSearch(navController)
+                ButtonSearch(navController, iconsColor)
             }
         }
 
@@ -91,7 +91,7 @@ fun HomeScreen(classes: WindowSizeClass, navController: NavController) {
                 ) {
                     LogosText()
                     Spacer(modifier = Modifier.height(40.dp))
-                    ButtonSearch(navController)
+                    ButtonSearch(navController,iconsColor)
                 }
             }
         }
@@ -186,11 +186,11 @@ fun LogosText() {
 }
 
 @Composable
-fun ButtonSearch(navController: NavController) {
+fun ButtonSearch(navController: NavController,iconsColor:Color) {
     Button(onClick = { navController.navigate(Film()) },
         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2196F3))
     ) {
-        Text(text = "Démarrer", color = Color.Black)
+        Text(text = "Démarrer", color = iconsColor)
     }
 }
 
