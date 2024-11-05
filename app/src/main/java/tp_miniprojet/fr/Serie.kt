@@ -32,3 +32,19 @@ fun SerieScreen(
     }
     GridObjects(series, navController,"tv",classeLargeur)
 }
+
+@Composable
+fun SerieDetailsScreen(serieId: Int, navController: NavHostController,classeLargeur: WindowWidthSizeClass) {
+    val viewModel: MainViewModel = viewModel()
+    val serieDetails by viewModel.serieDetails.collectAsState()
+
+    LaunchedEffect(serieId) {
+        viewModel.getSerieDetails(serieId)
+    }
+
+    serieDetails?.let { serie ->
+        val castMembers = serie.credits.cast.take(9)
+        CardDetails(serieDetails, castMembers, navController,"actor",classeLargeur)
+
+    }
+}

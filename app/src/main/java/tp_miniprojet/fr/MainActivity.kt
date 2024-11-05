@@ -7,6 +7,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -41,6 +42,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.motionEventSpy
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -140,12 +142,13 @@ class MainActivity : ComponentActivity() {
                         }
                     },
                     floatingActionButton = {
-                         SearchButtonLandscape(classeLargeur,
-                             currentDestination,
-                             searchQuery,
-                             isSearching,
-                             onSearchQueryChange = { searchQuery = it },
-                             onSearchStateChange = { isSearching = it },navController)
+                        SearchButtonLandscape(classeLargeur,
+                            currentDestination,
+                            searchQuery,
+                            isSearching,
+                            onSearchQueryChange = { searchQuery = it },
+                            onSearchStateChange = { isSearching = it }, navController
+                        )
 
 
                     },
@@ -163,42 +166,42 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                         Column {
-                           /* if (currentDestination?.hasRoute<Home>() != true) {
-                                when (classeLargeur) {
-                                    WindowWidthSizeClass.COMPACT -> {}
-                                    else -> {
-                                        Row(
-                                            Modifier
-                                                .height(85.dp)
-                                                .padding(top = innerPadding.calculateTopPadding())
-                                                .background(Color(0xFF2196F3))
-                                                .clip(RoundedCornerShape(30.dp))
-                                        ) {
-                                            SearchButtonLandscape(
-                                                classeLargeur,
-                                                currentDestination,
-                                                searchQuery,
-                                                isSearching,
-                                                onSearchQueryChange = { searchQuery = it },
-                                                onSearchStateChange = { isSearching = it },
-                                                navController
-                                            )
-                                        }
-                                    }
-                                }
-                            }
+                            /* if (currentDestination?.hasRoute<Home>() != true) {
+                                 when (classeLargeur) {
+                                     WindowWidthSizeClass.COMPACT -> {}
+                                     else -> {
+                                         Row(
+                                             Modifier
+                                                 .height(85.dp)
+                                                 .padding(top = innerPadding.calculateTopPadding())
+                                                 .background(Color(0xFF2196F3))
+                                                 .clip(RoundedCornerShape(30.dp))
+                                         ) {
+                                             SearchButtonLandscape(
+                                                 classeLargeur,
+                                                 currentDestination,
+                                                 searchQuery,
+                                                 isSearching,
+                                                 onSearchQueryChange = { searchQuery = it },
+                                                 onSearchStateChange = { isSearching = it },
+                                                 navController
+                                             )
+                                         }
+                                     }
+                                 }
+                             }
 
-                              var topPadding : Dp
-                            topPadding =
-                                when (classeLargeur) {
-                                WindowWidthSizeClass.COMPACT -> {
-                                    innerPadding.calculateTopPadding()
-                                }
-                                else -> {
-                                    0.dp
-                                }}
+                               var topPadding : Dp
+                             topPadding =
+                                 when (classeLargeur) {
+                                 WindowWidthSizeClass.COMPACT -> {
+                                     innerPadding.calculateTopPadding()
+                                 }
+                                 else -> {
+                                     0.dp
+                                 }}
 
-                           */
+                            */
                             NavHost(
                                 navController = navController, startDestination = Home(),
                                 modifier = Modifier.padding(innerPadding),
@@ -321,6 +324,7 @@ fun TopBar(
                     fontFamily = FontFamily.Serif,
                     color = iconsColor
                 )
+
             }
         },
         navigationIcon = {
@@ -515,7 +519,7 @@ fun SearchButton(
         },
         Modifier
             .background(Color(0xFF2196F3))
-           // .clip(RoundedCornerShape(16.dp)),
+        // .clip(RoundedCornerShape(16.dp)),
     ) {
         if (isSearching || findIfDetails(currentDestination)) {
             CommonIcon(Icons.Filled.ArrowBack)
@@ -540,14 +544,18 @@ fun SearchButtonLandscape(
         else -> {
             if (currentDestination?.hasRoute<Film>() == true || currentDestination?.hasRoute<Serie>() == true || currentDestination?.hasRoute<Actor>() == true) {
                 if (isSearching) {
-                    Row( Modifier
-                        .height(85.dp)
-                        .background(Color(0xFF2196F3))
-                        .clip(RoundedCornerShape(80.dp))){
+                    Row(
+                        Modifier
+                            .height(85.dp)
+                            .background(Color(0xFF2196F3))
+                            .clip(RoundedCornerShape(80.dp))
+                    ) {
                         SearchButton(
                             isSearching = isSearching,
                             onSearchQueryChange = onSearchQueryChange,
-                            onSearchStateChange = onSearchStateChange, currentDestination, navController
+                            onSearchStateChange = onSearchStateChange,
+                            currentDestination,
+                            navController
                         )
                         TextForResearch(searchQuery, onSearchQueryChange = onSearchQueryChange)
                     }

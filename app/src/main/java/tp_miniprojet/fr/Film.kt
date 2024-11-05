@@ -34,6 +34,20 @@ fun FilmScreen(
     GridObjects(movies, navController,"movie",classeLargeur)
 }
 
+@Composable
+fun FilmDetailsScreen(movieId: Int, navController: NavHostController,classeLargeur: WindowWidthSizeClass) {
+    val viewModel: MainViewModel = viewModel()
+    val movieDetails by viewModel.movieDetails.collectAsState()
+
+    LaunchedEffect(movieId) {
+        viewModel.getMovieDetails(movieId)
+    }
+
+    movieDetails?.let { movieDetails ->
+        val castMembers = movieDetails.credits.cast.take(9)
+        CardDetails(movieDetails, castMembers, navController,"actor",classeLargeur)
+    }
+}
 
 
 
