@@ -87,18 +87,22 @@ fun GridObjects(
 
 @Composable
 fun CardItem(card: CardType, navController: NavHostController, name: String) {
-    Card(elevation = CardDefaults.cardElevation(4.dp),
-        modifier = Modifier.height(300.dp)) {
+    Card(
+        elevation = CardDefaults.cardElevation(4.dp),
+        modifier = Modifier.height(300.dp)
+    ) {
         Column(
             modifier = Modifier
                 .padding(5.dp)
                 .clickable { navController.navigate(name + "Details/${card.getIdCard()}") },
         ) {
-            if (!card.getPosterPathCard().isNullOrEmpty()) {
-                PosterImage(card)
-            } else {
+            //if (!card.getPosterPathCard().isNullOrEmpty()) {
+            PosterImage(card)
+            /*} else {
                 PosterImageEmpty()
             }
+
+             */
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = card.getTitleCard(),
@@ -116,24 +120,31 @@ fun CardItem(card: CardType, navController: NavHostController, name: String) {
 
 @Composable
 fun PosterImage(card: CardType) {
-    AsyncImage(
-        model = posterUrl + card.getPosterPathCard(), // L'URL de l'image
+    val res = if (!card.getPosterPathCard().isNullOrEmpty()) {
+        rememberAsyncImagePainter(model =  posterUrl + card.getPosterPathCard())
+    } else {
+        painterResource(R.drawable.galery)
+    }
+    Image(
+        painter = res,
         contentDescription = "Poster du film",
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
     )
 }
-
+/*
 @Composable
 fun PosterImageEmpty() {
-    Image(
-        painter = painterResource(R.drawable.galery),  // Image locale dans drawable
-        contentDescription = "Film logo",
-        modifier = Modifier
-            .size(50.dp)
-    )
+Image(
+painter = painterResource(R.drawable.galery),
+contentDescription = "Film logo",
+modifier = Modifier
+.size(50.dp)
+)
 }
+
+*/
 
 
 @Composable
@@ -155,15 +166,15 @@ fun CommonLazyVerticalGrid(
 /*
 @Composable
 fun painterCard(card: Card): Painter {
-    Log.i("TESTPainter", "posterPath: ${card.getPosterPathCard()}")
-    val painter: Painter
-    if (card.getPosterPathCard().isEmpty()) {
-        painter=painterResource(id = R.drawable.galery)
-    } else {
-        painter=rememberAsyncImagePainter(model = "https://image.tmdb.org/t/p/w500${card.getPosterPathCard()}")
-    }
-    Log.i("TESTPainter", "painter : $painter")
-    return painter
+Log.i("TESTPainter", "posterPath: ${card.getPosterPathCard()}")
+val painter: Painter
+if (card.getPosterPathCard().isEmpty()) {
+painter=painterResource(id = R.drawable.galery)
+} else {
+painter=rememberAsyncImagePainter(model = "https://image.tmdb.org/t/p/w500${card.getPosterPathCard()}")
+}
+Log.i("TESTPainter", "painter : $painter")
+return painter
 }
 
- */
+*/
