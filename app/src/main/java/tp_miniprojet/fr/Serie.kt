@@ -21,7 +21,6 @@ fun SerieScreen(
 ) {
     val viewModel: MainViewModel = viewModel()
     val series by viewModel.series.collectAsState()
-    var selectedSerie by remember { mutableStateOf<ModelSerie?>(null) }
 
     LaunchedEffect(searchQuery.text) {
         if (searchQuery.text==""){
@@ -30,7 +29,7 @@ fun SerieScreen(
             viewModel.searchSeries(searchQuery.text)
         }
     }
-    GridObjects(series, navController,"tv",classeLargeur)
+    GridObjects(series, navController,"serie",classeLargeur)
 }
 
 @Composable
