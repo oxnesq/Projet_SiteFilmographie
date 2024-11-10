@@ -1,8 +1,6 @@
 package tp_miniprojet.fr
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,9 +17,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,7 +38,10 @@ import androidx.window.core.layout.WindowWidthSizeClass
 import tp_premiereapplication.fr.R
 
 @Composable
-fun HomeScreen(classes: WindowSizeClass, navController: NavController,iconsColor: Color) {
+fun HomeScreen(
+    classes: WindowSizeClass,
+    navController: NavController,
+) {
     //val classeHauteur = classes.windowHeightSizeClass
     val classeLargeur = classes.windowWidthSizeClass
     when (classeLargeur) {
@@ -60,7 +61,7 @@ fun HomeScreen(classes: WindowSizeClass, navController: NavController,iconsColor
                 Spacer(modifier = Modifier.height(40.dp))
                 LogosText()
                 Spacer(modifier = Modifier.height(40.dp))
-                ButtonSearch(navController, iconsColor)
+                ButtonSearch(navController)
             }
         }
 
@@ -91,7 +92,7 @@ fun HomeScreen(classes: WindowSizeClass, navController: NavController,iconsColor
                 ) {
                     LogosText()
                     Spacer(modifier = Modifier.height(40.dp))
-                    ButtonSearch(navController,iconsColor)
+                    ButtonSearch(navController)
                 }
             }
         }
@@ -186,11 +187,12 @@ fun LogosText() {
 }
 
 @Composable
-fun ButtonSearch(navController: NavController,iconsColor:Color) {
+fun ButtonSearch(navController: NavController) {
     Button(onClick = { navController.navigate(Film()) },
         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2196F3))
     ) {
-        Text(text = "Démarrer", color = iconsColor)
+        Text(text = "Démarrer", color = Color.Black)
+
     }
 }
 

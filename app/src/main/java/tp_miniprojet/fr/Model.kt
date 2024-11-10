@@ -72,6 +72,7 @@ data class ModelListMovie(
     val results: List<ModelMovie> = listOf(),
 )
 
+
 data class ModelMovie(
     val backdrop_path: String = "",
     val credits: Credits = Credits(),

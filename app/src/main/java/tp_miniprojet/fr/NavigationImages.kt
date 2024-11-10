@@ -22,16 +22,14 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 fun NavigationImage(
     currentDestination: NavDestination?,
     logoName: Int,
-    currentClass: Boolean?,
-    iconsColor: Color
-) {
+    currentClass: Boolean?) {
     Image(
         painter = painterResource(logoName),  // Image locale dans drawable
         contentDescription = "Nav logo",
         modifier = Modifier
             .size(30.dp),
         colorFilter = if (currentClass == true) {
-            ColorFilter.tint(iconsColor) // Couleur de l'icône quand sélectionné
+            ColorFilter.tint(Color.Black) // Couleur de l'icône quand sélectionné
         } else {
             ColorFilter.tint(Color.DarkGray) // Couleur de l'icône quand non sélectionné
         }
@@ -39,13 +37,13 @@ fun NavigationImage(
 }
 
 @Composable
-fun NavigationIconActor(currentDestination: NavDestination?,iconsColor: Color) {
+fun NavigationIconActor(currentDestination: NavDestination?) {
     Icon(
         imageVector = Icons.Filled.Person,  // Icône Material Design pour l'email
         contentDescription = "Actors",
         modifier = Modifier
             .size(30.dp),
-        tint = if (currentDestination?.hasRoute<Actor>() == true) iconsColor else Color.DarkGray
+        tint = if (currentDestination?.hasRoute<Actor>() == true) Color.Black else Color.DarkGray
     )
 }
 
@@ -56,6 +54,6 @@ fun CommonIcon(logoName: ImageVector) {
         contentDescription = "Icon",
         modifier = Modifier
             .size(30.dp),
-
+tint = Color.Black
     )
 }

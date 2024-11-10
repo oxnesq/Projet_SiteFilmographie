@@ -12,7 +12,6 @@ class MainViewModel : ViewModel() {
     val movies = MutableStateFlow<List<ModelMovie>>(listOf())
     val actors = MutableStateFlow<List<ModelActor>>(listOf())
     val series = MutableStateFlow<List<ModelSerie>>(listOf())
-    val genres = MutableStateFlow<List<Genre>>(listOf())
     val serieDetails = MutableStateFlow(ModelSerie())
     val movieDetails = MutableStateFlow(ModelMovie())
     val actorDetails = MutableStateFlow(ModelActor())

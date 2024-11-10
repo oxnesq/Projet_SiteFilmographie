@@ -1,27 +1,18 @@
 package tp_miniprojet.fr
 
-import android.content.Context
 import android.content.res.Configuration
-import android.content.res.Resources
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.Image
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -35,21 +26,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.motionEventSpy
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
 import androidx.navigation.compose.NavHost
@@ -64,7 +49,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import androidx.window.core.layout.WindowWidthSizeClass
-import kotlinx.serialization.json.Json.Default.configuration
 
 @Serializable
 class Home
@@ -100,15 +84,13 @@ class MainActivity : ComponentActivity() {
                 val screenHeight = configurationScreen.screenHeightDp.dp
 
                 //Color by modes
-                val currentNightMode =
-                    resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+                val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
                 var backgroundColor = Color(0xFFF5F5F5)
-                var iconsColor = Color.Black
                 when (currentNightMode) {
                     //Configuration.UI_MODE_NIGHT_NO -> {}
                     Configuration.UI_MODE_NIGHT_YES -> {
                         backgroundColor = Color.DarkGray
-                        iconsColor = Color.White
+
                     }
                 }
 
@@ -125,7 +107,6 @@ class MainActivity : ComponentActivity() {
                                         navController = navController,
                                         onSearchQueryChange = { searchQuery = it },
                                         onSearchStateChange = { isSearching = it },
-                                        iconsColor = iconsColor
                                     )
                                 }
                             }
@@ -136,7 +117,7 @@ class MainActivity : ComponentActivity() {
                         when (classeLargeur) {
                             WindowWidthSizeClass.COMPACT -> {
                                 if (currentDestination?.hasRoute<Home>() != true) {
-                                    BottomBar(currentDestination, navController, iconsColor)
+                                    BottomBar(currentDestination, navController)
                                 }
                             }
                         }
@@ -161,47 +142,11 @@ class MainActivity : ComponentActivity() {
                             WindowWidthSizeClass.COMPACT -> {}
                             else -> {
                                 Column() {
-                                    NavigationSideBar(currentDestination, navController, iconsColor)
+                                    NavigationSideBar(currentDestination, navController)
                                 }
                             }
                         }
                         Column {
-                            /* if (currentDestination?.hasRoute<Home>() != true) {
-                                 when (classeLargeur) {
-                                     WindowWidthSizeClass.COMPACT -> {}
-                                     else -> {
-                                         Row(
-                                             Modifier
-                                                 .height(85.dp)
-                                                 .padding(top = innerPadding.calculateTopPadding())
-                                                 .background(Color(0xFF2196F3))
-                                                 .clip(RoundedCornerShape(30.dp))
-                                         ) {
-                                             SearchButtonLandscape(
-                                                 classeLargeur,
-                                                 currentDestination,
-                                                 searchQuery,
-                                                 isSearching,
-                                                 onSearchQueryChange = { searchQuery = it },
-                                                 onSearchStateChange = { isSearching = it },
-                                                 navController
-                                             )
-                                         }
-                                     }
-                                 }
-                             }
-
-                               var topPadding : Dp
-                             topPadding =
-                                 when (classeLargeur) {
-                                 WindowWidthSizeClass.COMPACT -> {
-                                     innerPadding.calculateTopPadding()
-                                 }
-                                 else -> {
-                                     0.dp
-                                 }}
-
-                            */
                             NavHost(
                                 navController = navController, startDestination = Home(),
                                 modifier = Modifier.padding(innerPadding),
@@ -209,8 +154,7 @@ class MainActivity : ComponentActivity() {
                                 composable<Home> {
                                     HomeScreen(
                                         windowSizeClass,
-                                        navController,
-                                        iconsColor
+                                        navController
                                     )
                                 }
                                 composable<Film> {
@@ -306,7 +250,6 @@ fun TopBar(
     navController: NavHostController,
     onSearchQueryChange: (TextFieldValue) -> Unit,
     onSearchStateChange: (Boolean) -> Unit,
-    iconsColor: Color
 ) {
     TopAppBar(
         colors = TopAppBarDefaults.smallTopAppBarColors(
@@ -322,7 +265,7 @@ fun TopBar(
                     overflow = TextOverflow.Ellipsis,
                     fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily.Serif,
-                    color = iconsColor
+                    color = Color.Black
                 )
 
             }
@@ -343,7 +286,7 @@ fun TopBar(
                     contentDescription = "Home page",
                     modifier = Modifier
                         .size(28.dp),
-                    tint = iconsColor
+                    tint = Color.Black
                 )
             }
 
@@ -357,7 +300,6 @@ fun TopBar(
 fun BottomBar(
     currentDestination: NavDestination?,
     navController: NavHostController,
-    iconsColor: Color
 ) {
     NavigationBar(
         modifier = Modifier
@@ -371,7 +313,7 @@ fun BottomBar(
                 NavigationImage(
                     currentDestination,
                     R.drawable.film,
-                    currentDestination?.hasRoute<Film>(), iconsColor
+                    currentDestination?.hasRoute<Film>()
                 )
             },
             selected = currentDestination?.hasRoute<Film>() == true,
@@ -387,7 +329,7 @@ fun BottomBar(
                 NavigationImage(
                     currentDestination,
                     R.drawable.tv,
-                    currentDestination?.hasRoute<Serie>(), iconsColor
+                    currentDestination?.hasRoute<Serie>()
                 )
             },
             selected = currentDestination?.hasRoute<Serie>() == true,
@@ -400,7 +342,7 @@ fun BottomBar(
             onClick = { navController.navigate(Serie()) })
         NavigationBarItem(
             icon = {
-                NavigationIconActor(currentDestination, iconsColor)
+                NavigationIconActor(currentDestination)
             },
             selected = currentDestination?.hasRoute<Actor>() == true,
             label = { Text("Acteurs") },
@@ -414,7 +356,7 @@ fun BottomBar(
 @Composable
 fun NavigationSideBar(
     currentDestination: NavDestination?,
-    navController: NavHostController, iconsColor: Color
+    navController: NavHostController
 ) {
 
     if (currentDestination?.hasRoute<Home>() != true) {
@@ -427,7 +369,7 @@ fun NavigationSideBar(
                     NavigationImage(
                         currentDestination,
                         R.drawable.film,
-                        currentDestination?.hasRoute<Film>(), iconsColor
+                        currentDestination?.hasRoute<Film>()
                     )
                 },
                 selected = currentDestination?.hasRoute<Film>() == true,
@@ -442,7 +384,7 @@ fun NavigationSideBar(
                     NavigationImage(
                         currentDestination,
                         R.drawable.tv,
-                        currentDestination?.hasRoute<Serie>(), iconsColor
+                        currentDestination?.hasRoute<Serie>()
                     )
                 },
                 selected = currentDestination?.hasRoute<Serie>() == true,
@@ -454,7 +396,7 @@ fun NavigationSideBar(
 
 
             NavigationRailItem(
-                icon = { NavigationIconActor(currentDestination, iconsColor) },
+                icon = { NavigationIconActor(currentDestination) },
                 selected = currentDestination?.hasRoute<Actor>() == true,
                 label = { Text("Acteurs") },
                 modifier = Modifier.weight(0.45f),
@@ -519,6 +461,7 @@ fun SearchButton(
         },
         Modifier
             .background(Color(0xFF2196F3))
+
         // .clip(RoundedCornerShape(16.dp)),
     ) {
         if (isSearching || findIfDetails(currentDestination)) {
@@ -583,6 +526,7 @@ fun findIfDetails(currentDestination: NavDestination?): Boolean {
     ) bo = true
     return bo
 }
+
 
 /*
 @Composable
