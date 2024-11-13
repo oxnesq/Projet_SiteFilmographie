@@ -62,6 +62,9 @@ class Serie()
 @Serializable
 class Actor()
 
+@Serializable
+class Collection()
+
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -176,6 +179,12 @@ class MainActivity : ComponentActivity() {
                                         searchQuery,
                                         navController,
                                         classeLargeur
+                                    )
+                                }
+
+                                composable<Collection> {
+                                    CollectionScreen(
+
                                     )
                                 }
 
@@ -350,6 +359,20 @@ fun BottomBar(
                 indicatorColor = Color(0xFF2264FF)
             ),
             onClick = { navController.navigate(Actor()) })
+        NavigationBarItem(
+            icon = {
+                NavigationImage(
+                    currentDestination,
+                    R.drawable.folder,
+                    currentDestination?.hasRoute<Serie>()
+                )
+            },
+            selected = currentDestination?.hasRoute<Collection>() == true,
+            label = { Text("Collections") },
+            colors = NavigationBarItemDefaults.colors(
+                indicatorColor = Color(0xFF2264FF)
+            ),
+            onClick = { navController.navigate(Collection()) })
     }
 }
 
@@ -402,6 +425,21 @@ fun NavigationSideBar(
                 modifier = Modifier.weight(0.45f),
                 colors = NavigationRailItemDefaults.colors(indicatorColor = Color(0xFF2264FF)),
                 onClick = { navController.navigate(Actor()) }
+            )
+
+            NavigationRailItem(
+                icon = {
+                    NavigationImage(
+                        currentDestination,
+                        R.drawable.folder,
+                        currentDestination?.hasRoute<Collection>()
+                    )
+                },
+                selected = currentDestination?.hasRoute<Collection>() == true,
+                label = { Text("Collection") },
+                modifier = Modifier.weight(0.45f),
+                colors = NavigationRailItemDefaults.colors(indicatorColor = Color(0xFF2264FF)),
+                onClick = { navController.navigate(Collection()) }
             )
         }
 
