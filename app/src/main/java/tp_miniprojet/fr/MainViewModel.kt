@@ -15,15 +15,15 @@ class MainViewModel : ViewModel() {
     val serieDetails = MutableStateFlow(ModelSerie())
     val movieDetails = MutableStateFlow(ModelMovie())
     val actorDetails = MutableStateFlow(ModelActor())
-
-
+    val collectionDetails = MutableStateFlow(CollectionResult())
+    val collectionHorror = MutableStateFlow(CollectionResult())
     val retrofit = Retrofit.Builder()
         .baseUrl("https://api.themoviedb.org/3/")
         .addConverterFactory(MoshiConverterFactory.create())
         .build();
 
     val api = retrofit.create(TmdbApi::class.java)
-    val api_key= "b57151d36fecd1b693da830a2bc5766f"
+    val api_key = "b57151d36fecd1b693da830a2bc5766f"
 
     fun getMovies() {
         viewModelScope.launch {
@@ -43,41 +43,51 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun searchMovies(searchQuery: String){
+    fun searchMovies(searchQuery: String) {
         viewModelScope.launch {
             movies.value = api.searchmovies(api_key, searchQuery, "fr").results
         }
     }
 
-    fun searchSeries(searchQuery: String){
+    fun searchSeries(searchQuery: String) {
         viewModelScope.launch {
             series.value = api.searchseries(api_key, searchQuery, "fr").results
         }
     }
 
-    fun searchActors(searchQuery: String){
+    fun searchActors(searchQuery: String) {
         viewModelScope.launch {
             actors.value = api.searchactors(api_key, searchQuery, "fr").results
         }
     }
 
-    fun getActorDetails(id: Int){
+    fun getActorDetails(id: Int) {
         viewModelScope.launch {
-            actorDetails.value = api.actorDetails(id.toString(),api_key, "fr", "credits")
+            actorDetails.value = api.actorDetails(id.toString(), api_key, "fr", "credits")
         }
     }
 
-    fun getMovieDetails(id: Int){
+    fun getMovieDetails(id: Int) {
         viewModelScope.launch {
-            movieDetails.value = api.movieDetails(id.toString(),api_key, "fr", "credits")
+            movieDetails.value = api.movieDetails(id.toString(), api_key, "fr", "credits")
         }
     }
 
-    fun getSerieDetails(id: Int){
+    fun getSerieDetails(id: Int) {
         viewModelScope.launch {
-            serieDetails.value = api.serieDetails(id.toString(),api_key, "fr", "credits")
+            serieDetails.value = api.serieDetails(id.toString(), api_key, "fr", "credits")
         }
     }
 
+    fun getCollections(text: String) {
+        viewModelScope.launch {
+            collectionDetails.value = api.searchCollection(text, api_key, "fr")
+        }
+    }
 
+    fun getCollectionsHorror() {
+        viewModelScope.launch {
+            collectionHorror.value = api.searchCollection("horror", api_key, "fr")
+        }
+    }
 }

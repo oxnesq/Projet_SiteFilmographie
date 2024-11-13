@@ -105,21 +105,21 @@ data class Genre(
 
 
 data class CollectionModel(
-    val page: Int,
-    val results: List<Result>,
-    val total_pages: Int,
-    val total_results: Int
+    val page: Int=0,
+    val results: List<CollectionResult> = listOf(),
+    val total_pages: Int=0,
+    val total_results: Int=0,
 )
 
-data class Result(
-    val adult: Boolean,
-    val backdrop_path: String,
-    val id: Int,
-    val name: String,
-    val original_language: String,
-    val original_name: String,
-    val overview: String,
-    val poster_path: String
+data class CollectionResult(
+    val adult: Boolean = true,
+    val backdrop_path: String="",
+    val id: Int=0,
+    val name: String="",
+    val original_language: String="",
+    val original_name: String="",
+    val overview: String="",
+    val poster_path: String="",
 )
 
 

@@ -19,6 +19,9 @@ interface TmdbApi {
     @GET("trending/person/week")
     suspend fun lastactors(@Query("api_key") api_key: String, @Query("language") language: String): ModelListActor
 
+
+
+
     // CHERCHER UN FILM ACTEUR SERIE
     @GET("movie/{id}")
     suspend fun movieDetails(@Path("id") id: String,@Query("api_key") api_key: String, @Query("language") language: String, @Query("append_to_response") appendToResponse: String ): ModelMovie
@@ -28,6 +31,8 @@ interface TmdbApi {
 
     @GET("tv/{id}")
     suspend fun serieDetails(@Path("id") id: String,@Query("api_key") api_key: String, @Query("language") language: String, @Query("append_to_response") appendToResponse: String ): ModelSerie
+
+
 
     // CHERCHER DES FILMS ACTEURS SERIES AVEC MOTS CLES
     @GET("search/movie")
@@ -41,7 +46,12 @@ interface TmdbApi {
     @GET("search/tv")
     suspend fun searchseries(@Query("api_key") api_key: String,
                              @Query("query") searchQuery: String, @Query("language") language: String): ModelListSerie
-
+    @GET("search/collection")
+    suspend fun searchCollection(
+        @Query("api_key") api_key: String,
+        @Query("query") searchQuery: String,
+        @Query("language") language: String
+    ): CollectionResult
 
 
 }
