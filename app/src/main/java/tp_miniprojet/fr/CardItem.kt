@@ -44,6 +44,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.window.core.layout.WindowWidthSizeClass
@@ -59,7 +60,7 @@ fun GridObjects(
     list: List<CardType>,
     navController: NavHostController,
     name: String,
-    classeLargeur: WindowWidthSizeClass,
+    classeLargeur: WindowWidthSizeClass,currentDestination: NavDestination?
 ) {
     Column(
         modifier = Modifier
@@ -79,14 +80,14 @@ fun GridObjects(
         }
         CommonLazyVerticalGrid(content = {
             items(list) { l ->
-                CardItem(l, navController, name)
+                CardItem(l, navController, name, currentDestination )
             }
         }, numberOfMovie)
     }
 }
 
 @Composable
-fun CardItem(card: CardType, navController: NavHostController, name: String) {
+fun CardItem(card: CardType, navController: NavHostController, name: String,currentDestination: NavDestination?) {
     Card(
         elevation = CardDefaults.cardElevation(4.dp),
         modifier = Modifier.height(300.dp)
@@ -94,7 +95,7 @@ fun CardItem(card: CardType, navController: NavHostController, name: String) {
         Column(
             modifier = Modifier
                 .padding(5.dp)
-                .clickable { navController.navigate(name + "Details/${card.getIdCard()}") },
+                .clickable {if (currentDestination?.hasRoute<Collection>() != true){ navController.navigate(name + "Details/${card.getIdCard()}") }},
         ) {
             //if (!card.getPosterPathCard().isNullOrEmpty()) {
             PosterImage(card)

@@ -31,6 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
 import androidx.window.core.layout.WindowWidthSizeClass
 import coil.compose.AsyncImage
@@ -44,7 +45,7 @@ fun CardDetails(
     castMembers: List<CardType>,
     navController: NavHostController,
     nameClass: String,
-    classeLargeur: WindowWidthSizeClass
+    classeLargeur: WindowWidthSizeClass,currentDestination: NavDestination?
 ) {
     val scrollState = rememberScrollState()
     Column(
@@ -69,12 +70,12 @@ fun CardDetails(
             OverviewCard(card,"Biographie")
             CommonTitle("Filmographie")
         }
-        ShowCast(castMembers, navController, nameClass,classeLargeur)
+        ShowCast(castMembers, navController, nameClass,classeLargeur,currentDestination)
     }
 }
 
 @Composable
-fun ShowCast(castMembers: List<CardType>, navController: NavHostController, nameClass: String,classeLargeur: WindowWidthSizeClass) {
+fun ShowCast(castMembers: List<CardType>, navController: NavHostController, nameClass: String,classeLargeur: WindowWidthSizeClass,currentDestination: NavDestination?) {
     var num = 3
     when (classeLargeur) {WindowWidthSizeClass.COMPACT -> {} else->{num=5}}
     for (itemSeparate in castMembers.chunked(num)) {
@@ -86,7 +87,7 @@ fun ShowCast(castMembers: List<CardType>, navController: NavHostController, name
                 Column(
                     modifier = Modifier.weight(0.33f),
                 ) {
-                    CardItem(i, navController, nameClass)
+                    CardItem(i, navController, nameClass,currentDestination)
                 }
         }
     }

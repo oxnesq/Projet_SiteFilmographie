@@ -5,7 +5,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,7 +29,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
@@ -164,27 +162,28 @@ class MainActivity : ComponentActivity() {
                                     FilmScreen(
                                         searchQuery,
                                         navController,
-                                        classeLargeur
+                                        classeLargeur,currentDestination
                                     )
                                 }
                                 composable<Serie> {
                                     SerieScreen(
                                         searchQuery,
                                         navController,
-                                        classeLargeur
+                                        classeLargeur,currentDestination
                                     )
                                 }
                                 composable<Actor> {
                                     ActorScreen(
                                         searchQuery,
                                         navController,
-                                        classeLargeur
+                                        classeLargeur,currentDestination
                                     )
                                 }
 
                                 composable<Collection> {
                                     CollectionScreen(
-                                        searchQuery
+                                        searchQuery,navController,
+                                        classeLargeur,currentDestination
                                     )
                                 }
 
@@ -199,7 +198,7 @@ class MainActivity : ComponentActivity() {
                                         FilmDetailsScreen(
                                             movieId = it,
                                             navController,
-                                            classeLargeur
+                                            classeLargeur,currentDestination
                                         )
                                     }
                                 }
@@ -215,7 +214,7 @@ class MainActivity : ComponentActivity() {
                                         ActorDetailsScreen(
                                             actorId = it,
                                             navController,
-                                            classeLargeur
+                                            classeLargeur,currentDestination
                                         )
                                     }
                                 }
@@ -231,7 +230,7 @@ class MainActivity : ComponentActivity() {
                                         SerieDetailsScreen(
                                             serieId = it,
                                             navController,
-                                            classeLargeur
+                                            classeLargeur,currentDestination
                                         )
                                     }
                                 }

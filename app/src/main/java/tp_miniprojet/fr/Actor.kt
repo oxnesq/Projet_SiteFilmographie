@@ -9,6 +9,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
 import androidx.window.core.layout.WindowWidthSizeClass
 
@@ -17,7 +18,7 @@ import androidx.window.core.layout.WindowWidthSizeClass
 fun ActorScreen(
     searchQuery: TextFieldValue,
     navController: NavHostController,
-    classeLargeur: WindowWidthSizeClass
+    classeLargeur: WindowWidthSizeClass,currentDestination: NavDestination?
 ) {
     val viewModel: MainViewModel = viewModel()
     val actors by viewModel.actors.collectAsState()
@@ -32,12 +33,12 @@ fun ActorScreen(
         }
     }
 
-    GridObjects(actors, navController,"actor", classeLargeur)
+    GridObjects(actors, navController,"actor", classeLargeur,currentDestination)
 
 }
 
 @Composable
-fun ActorDetailsScreen(actorId: Int, navController: NavHostController,classeLargeur: WindowWidthSizeClass) {
+fun ActorDetailsScreen(actorId: Int, navController: NavHostController,classeLargeur: WindowWidthSizeClass,currentDestination: NavDestination?) {
     val viewModel: MainViewModel = viewModel()
     val actorDetails by viewModel.actorDetails.collectAsState()
 
@@ -47,7 +48,7 @@ fun ActorDetailsScreen(actorId: Int, navController: NavHostController,classeLarg
 
     actorDetails?.let { actor ->
         val filmography = actor.credits.cast.take(9)
-        CardDetails(actorDetails, filmography, navController,"movie",classeLargeur)
+        CardDetails(actorDetails, filmography, navController,"movie",classeLargeur, currentDestination )
 
     }
 }

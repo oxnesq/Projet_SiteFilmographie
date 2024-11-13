@@ -1,26 +1,20 @@
 package tp_miniprojet.fr
 
-import android.util.Log
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.Card
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import kotlin.math.log
+import androidx.navigation.NavDestination
+import androidx.navigation.NavHostController
+import androidx.window.core.layout.WindowWidthSizeClass
 
 @Composable
-fun CollectionScreen(searchQuery: TextFieldValue,
+fun CollectionScreen(
+    searchQuery: TextFieldValue, navController: NavHostController,
+    classeLargeur: WindowWidthSizeClass,currentDestination: NavDestination?
+
 ){
 
     val viewModel: MainViewModel = viewModel()
@@ -34,13 +28,9 @@ fun CollectionScreen(searchQuery: TextFieldValue,
         }
     }
 
+    GridObjects(collections, navController,"movie",classeLargeur,currentDestination)
 
-    if (collections.isEmpty()) {
-        Text(text = "No collections available.")
-        return
-    }
-
-
+/*
     LazyVerticalGrid(
         columns = GridCells.Fixed(2), // Définir 2 colonnes
         modifier = Modifier.fillMaxSize(),
@@ -55,5 +45,7 @@ fun CollectionScreen(searchQuery: TextFieldValue,
             }
         }
     }
+
+ */
 
 }

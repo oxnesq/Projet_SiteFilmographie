@@ -117,6 +117,16 @@ data class CollectionResult(
     val original_name: String="",
     val overview: String="",
     val poster_path: String="",
-)
+): CardType {
+    override fun isAnActor() = false
+    override fun getTitleCard() = name
+    override fun getIdCard() = id
+    override fun getPosterPathCard() = poster_path
+    override fun getBackdropPathCard() = backdrop_path
+    override fun getOverviewCard() = overview
+    override fun getReleaseDateCard() = ""
+    override fun getGenresCard() :  List<Genre> = listOf()
+    //override fun getCreditsCard() = credits
+}
 
 
