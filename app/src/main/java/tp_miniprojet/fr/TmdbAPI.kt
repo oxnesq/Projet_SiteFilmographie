@@ -51,7 +51,7 @@ interface TmdbApi {
         @Query("api_key") api_key: String,
         @Query("query") searchQuery: String,
         @Query("language") language: String
-    ): CollectionResult
+    ): CollectionModel
 
 
 }

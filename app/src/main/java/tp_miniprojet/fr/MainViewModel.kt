@@ -15,8 +15,8 @@ class MainViewModel : ViewModel() {
     val serieDetails = MutableStateFlow(ModelSerie())
     val movieDetails = MutableStateFlow(ModelMovie())
     val actorDetails = MutableStateFlow(ModelActor())
-    val collectionDetails = MutableStateFlow(CollectionResult())
-    val collectionHorror = MutableStateFlow(CollectionResult())
+    val collectionDetails = MutableStateFlow<List<CollectionResult>>(listOf())
+    val collectionHorror = MutableStateFlow<List<CollectionResult>>(listOf())
     val retrofit = Retrofit.Builder()
         .baseUrl("https://api.themoviedb.org/3/")
         .addConverterFactory(MoshiConverterFactory.create())
@@ -81,13 +81,13 @@ class MainViewModel : ViewModel() {
 
     fun getCollections(text: String) {
         viewModelScope.launch {
-            collectionDetails.value = api.searchCollection(text, api_key, "fr")
+            collectionDetails.value = api.searchCollection(text, api_key, "fr").results
         }
     }
 
     fun getCollectionsHorror() {
         viewModelScope.launch {
-            collectionHorror.value = api.searchCollection("horror", api_key, "fr")
+            collectionHorror.value = api.searchCollection("horror", api_key, "fr").results
         }
     }
 }
