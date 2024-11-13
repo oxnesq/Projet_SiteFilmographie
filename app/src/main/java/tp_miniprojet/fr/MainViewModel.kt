@@ -87,7 +87,7 @@ class MainViewModel : ViewModel() {
 
     fun getCollectionsHorror() {
         viewModelScope.launch {
-            collectionHorror.value = api.searchCollection("horror", api_key, "fr").results
+            collectionHorror.value = api.searchCollection(api_key ,"horror", "fr").results
         }
     }
 }

@@ -184,7 +184,7 @@ class MainActivity : ComponentActivity() {
 
                                 composable<Collection> {
                                     CollectionScreen(
-
+                                        searchQuery
                                     )
                                 }
 

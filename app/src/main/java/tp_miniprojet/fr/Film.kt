@@ -27,7 +27,6 @@ fun FilmScreen(
         } else {
             viewModel.searchMovies(searchQuery.text)
         }
-
     }
 
 
